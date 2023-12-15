@@ -20,3 +20,5 @@ https://sensor-js.xyz/demo.html
 https://web.dev/generic-sensor/
 
 https://www.w3.org/TR/orientation-event/
+
+Penis makovi
