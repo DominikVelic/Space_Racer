@@ -22,4 +22,4 @@ https://web.dev/generic-sensor/
 https://www.w3.org/TR/orientation-event/
 
 Penis makovi
-Lofas Bravčovi
+Lofas Bravčoviii
