@@ -15,3 +15,32 @@ body{
 *{
     box-sizing: border-box;
 }
+
+.object{
+    position: absolute;
+    border-radius: 15px;
+    top: 40%;
+    right: 56%;
+    width: 100px;
+    height: 100px;
+}
+
+.meteor{
+    width: 150px;
+    height: 150px;
+}
+
+.rocket{
+    width: 150px;
+    height: 150px;
+}
+
+.player{
+    position: absolute;
+    border-radius: 15px;
+    bottom: 0%;
+    right: 50%;
+    width: 100px;
+    height: 100px;
+}
+
