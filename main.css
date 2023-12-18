@@ -1,16 +1,7 @@
-html {
-    max-width: 70ch;
-    padding: 3em 1em;
-    margin: auto;
-    line-height: 1.75;
-    font-size: 1.25em;
-}
-
 body{
     padding: 0;
     margin: 0;
 }
-
 
 *{
     box-sizing: border-box;
@@ -18,16 +9,20 @@ body{
 
 .object{
     position: absolute;
-    border-radius: 15px;
-    top: 40%;
-    right: 56%;
     width: 100px;
     height: 100px;
 }
 
-.meteor{
-    width: 150px;
-    height: 150px;
+.game{
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game img{
+    width: 200vh;
+    height: 100vh;
 }
 
 .rocket{

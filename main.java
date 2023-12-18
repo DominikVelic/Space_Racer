@@ -1,45 +1,41 @@
 console.log("loaded");
 
-let rocket = document.getElementById("rocket");
+let player = document.getElementById("rocket");
+let obstacles = [];
+const FPS = 60; // Set your frames per second
+const frameDuration = 1000 / FPS;
+let lastTime = Date.now();
 
-let fps = 60;
-let frameTime = 1000 / fps; // Time for each frame in milliseconds
-let lastTime = performance.now();
+function gameLoop() {
+    const currentTime = Date.now();
+    const deltaTime = currentTime - lastTime;
 
-let lastTime = 0;
-
-function gameLoop(currentTime) {
-    let deltaTime = currentTime - lastTime;
-
-    if (deltaTime < frameTime) {
-        // If not enough time has passed for the next frame, wait
-        requestAnimationFrame(gameLoop);
-        return;
+    if (deltaTime > frameDuration) {
+        // Update game state here
+        update();
+        // Render game state here
+        render();
+        lastTime = currentTime;
     }
 
-    lastTime = currentTime;
+    window.requestAnimationFrame(gameLoop);
+}
 
-    // Your game logic goes here
+function update(){
+    // todo: aktualizovat poziciu rackety a obstacles[]
+}
 
-    requestAnimationFrame(gameLoop);
+function render(){
+    // todo: nakreslime img na pozicii kde su obstacles[]
 }
 
 
 function startGame(){
-
     menuScreen();
     // Start the game loop
-    requestAnimationFrame(gameLoop);
-    
+    window.requestAnimationFrame(gameLoop);
 }
 
 
-function menuScreen(){
-
-    while(true){
-
-    }
-
-}
 
 startGame();
