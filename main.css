@@ -9,8 +9,19 @@ body{
 
 .object{
     position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.space-img{
+    width: 200vh;
+    height: 100vh;
+}
+
+.object-img{
     width: 100px;
-    height: 100px;
+    height: auto; 
+    background-color: transparent;
 }
 
 .game{
@@ -18,11 +29,6 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.game img{
-    width: 200vh;
-    height: 100vh;
 }
 
 .rocket{
