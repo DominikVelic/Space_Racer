@@ -39,7 +39,7 @@ body{
 .player{
     position: absolute;
     border-radius: 15px;
-    bottom: 0%;
+    bottom: 10%;
     right: 50%;
     width: 100px;
     height: 100px;
