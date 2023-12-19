@@ -5,6 +5,7 @@ let obstacles = [];
 const FPS = 60; // Set your frames per second
 const frameDuration = 1000 / FPS;
 let lastTime = Date.now();
+let playerSpeed = 5;
 
 function gameLoop() {
     const currentTime = Date.now();
@@ -23,6 +24,7 @@ function gameLoop() {
 
 function update(){
     // todo: aktualizovat poziciu rackety a obstacles[]
+    
 }
 
 function render(){
@@ -37,5 +39,13 @@ function startGame(){
 }
 
 
+function menuScreen(){
 
-startGame();
+}
+
+function generateMeteors(){
+    
+}
+
+
+menuScreen()
