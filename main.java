@@ -2,13 +2,13 @@ console.log("loaded");
 
 function startGame() {
     myGameArea.start();
-    myGamePiece = new component("rocket",240,0,20,10);
+    myGamePiece = new component("rocket",0,0,100,100);
 }
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.width = 420;
-        this.height = 180;
+        this.canvas.width = 1000;
+        this.canvas.height = 800;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 50);
@@ -25,19 +25,20 @@ function component(objectType, x, y, width, height) {
   this.height = height;
   this.x = x;
   this.y = y;
+  this.imgSrc = findObjectSrc(objectType);
   ctx = myGameArea.context;
-
   this.update = function(){
       let img = new Image();
-      img.src = findObjectSrc(objectType);
+      img.src = this.imgSrc;
       img.onload = function() {
-        ctx.drawImage(img, x, y, width, height);
+        ctx.drawImage(img, this.x, this.y, this.width, this.height);
       };
   }
 }
 
 function updateGameArea(){
     myGameArea.clear();
+    myGamePiece.x += 1;
     myGamePiece.update();
 }
 
