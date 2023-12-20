@@ -31,5 +31,12 @@ function component(width, height, objectType, x, y) {
 }
 
 function findObjectSrc(objectType){
-
+    switch(objectType){
+        case 'rocket':
+            return '/img/rocket.png';
+            break;
+        case 'meteor':
+            return '/img/meteor.png';
+            return;
+    }
 }
