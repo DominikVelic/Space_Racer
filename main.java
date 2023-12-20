@@ -23,8 +23,13 @@ function component(width, height, objectType, x, y) {
   this.x = x;
   this.y = y;
   ctx = myGameArea.context;
-  
-  imgSource = findObjectSrc(objectType);
+  let img = new Image();
+  img.src = findObjectSrc(objectType);
+  image.onload = function() {
+    ctx.drawImage(image, x, y, width, height);
+  };
+}
 
-  ctx.fillRect(this.x, this.y, this.width, this.height);
+function findObjectSrc(objectType){
+
 }
