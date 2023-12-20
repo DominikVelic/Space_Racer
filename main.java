@@ -1,51 +1,30 @@
 console.log("loaded");
 
-let player = document.getElementById("rocket");
-let obstacles = [];
-const FPS = 60; // Set your frames per second
-const frameDuration = 1000 / FPS;
-let lastTime = Date.now();
-let playerSpeed = 5;
+function startGame() {
+    myGameArea.start();
+    myGamePiece = new component(30, 30, "rocket", 10, 120);
+}
 
-function gameLoop() {
-    const currentTime = Date.now();
-    const deltaTime = currentTime - lastTime;
-
-    if (deltaTime > frameDuration) {
-        // Update game state here
-        update();
-        // Render game state here
-        render();
-        lastTime = currentTime;
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 480;
+        this.canvas.height = 270;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     }
-
-    window.requestAnimationFrame(gameLoop);
 }
 
-function update(){
-    // todo: aktualizovat poziciu rackety a obstacles[]
-    
+var myGamePiece;
+
+function component(width, height, objectType, x, y) {
+  this.width = width;
+  this.height = height;
+  this.x = x;
+  this.y = y;
+  ctx = myGameArea.context;
+  
+  imgSource = findObjectSrc(objectType);
+
+  ctx.fillRect(this.x, this.y, this.width, this.height);
 }
-
-function render(){
-    // todo: nakreslime img na pozicii kde su obstacles[]
-}
-
-
-function startGame(){
-    menuScreen();
-    // Start the game loop
-    window.requestAnimationFrame(gameLoop);
-}
-
-
-function menuScreen(){
-
-}
-
-function generateMeteors(){
-    
-}
-
-
-menuScreen()
