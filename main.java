@@ -4,17 +4,17 @@ let RocketPlayer;
 let objects=[];
 let levelIndex=0;
 let numOfLevels=1;
+let canvasWidth = 3940;
+let canvasHeight = 2160;
 
 function fillObjects(){
     //načitanie jsonu/jsonov že každy prvok bude level ktory bude obsahovať objekty svojho levelu
     for(let i = 0; i<numOfLevels; i++){
         objects[i]=[];
         //for number of objects in level abo daco take
-        objects[i][0]=new Meteor("meteor",1850,0,240,240);
+        objects[i][0]=new Meteor("meteor",1850,0,400,400);
     }
 }
-
-
 
 function startGame() {
     GameArea.start();
@@ -25,8 +25,8 @@ function startGame() {
 let GameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 3940;
-        this.canvas.height = 2160;
+        this.canvas.width = canvasWidth;
+        this.canvas.height = canvasHeight;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 10);
@@ -48,8 +48,6 @@ let GameArea = {
         if (this.keys && this.keys[83]) {RocketPlayer.moveDown();}
     }
 }
-
-
 
 class Component {
     
@@ -75,14 +73,10 @@ class Component {
     }
 
     move(){
-        if(this.x+this.speedX>=0 && this.x+this.speedX<=3940-this.width){
-            this.x += this.speedX;
-        }
-        if(this.y+this.speedY>=0&& this.y+this.speedY<=2160-this.height){
-            this.y += this.speedY;
-        }
+        this.x += this.speedX;
+        this.y += this.speedY;
     }
-    
+
     resetSpeed() {
         this.speedX = 0;
         this.speedY = 0;
@@ -90,10 +84,25 @@ class Component {
     
 }
 
+// keby chceme pouzit tuto logiku znova tak som ju vlozil do tejto funkcie aby sa dala lahko pouzit znovu pre vsetky objekty
+function isInCanvasX(Component){
+    if(Component.x + Component.speedX >= 0 && Component.x + Component.speedX <= canvasWidth - Component.width){
+        return true;
+    }
+    return false;
+}
+
+function isInCanvasY(Component){
+    if(Component.y + Component.speedY >= 0 && Component.y + Component.speedY <= canvasHeight - Component.height){
+        return true;
+    }
+    return false;
+}
+
 class Meteor extends Component{
     constructor(objectType, x, y, width, height){
         super(objectType, x, y, width, height);
-        this.moveSpeed = 0.01;
+        this.moveSpeed = 0.05;
     }
     moveDown() {
         this.speedY += this.moveSpeed;
@@ -118,6 +127,15 @@ class Player extends Component{
     }
     moveRight() {
         this.speedX += this.moveSpeed;
+    }
+    //Overridol som move() metodu aby musel zostat hrac na hracej ploche
+    move(){
+        if(isInCanvasX(this)){
+            this.x += this.speedX;
+        }
+        if(isInCanvasY(this)){
+            this.y += this.speedY;
+        }
     }
 };
 
