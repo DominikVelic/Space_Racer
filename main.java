@@ -2,16 +2,24 @@ console.log("loaded");
 
 let RocketPlayer;
 let objects=[];
+let levelIndex=0;
+let numOfLevels=1;
 
 function fillObjects(){
     //načitanie jsonu/jsonov že každy prvok bude level ktory bude obsahovať objekty svojho levelu
+    for(let i = 0; i<numOfLevels; i++){
+        objects[i]=[];
+        //for number of objects in level abo daco take
+        objects[i][0]=new Meteor("meteor",1850,0,240,240);
+    }
 }
 
 
 
 function startGame() {
     GameArea.start();
-    RocketPlayer = new Player("rocket",0,0,240,240);
+    RocketPlayer = new Player("rocket",1850,1900,240,240);
+    fillObjects();
 }
 
 let GameArea = {
@@ -82,6 +90,16 @@ class Component {
     
 }
 
+class Meteor extends Component{
+    constructor(objectType, x, y, width, height){
+        super(objectType, x, y, width, height);
+        this.moveSpeed = 0.01;
+    }
+    moveDown() {
+        this.speedY += this.moveSpeed;
+    }
+}
+
 class Player extends Component{
 
     constructor(objectType, x, y, width, height){
@@ -105,6 +123,11 @@ class Player extends Component{
 
 function updateGameArea(){
     GameArea.clear();
+    for(let i = 0; i<objects[levelIndex].length; i++){
+        objects[levelIndex][i].moveDown();
+        objects[levelIndex][i].move();
+        objects[levelIndex][i].update(); //do cyklu
+    }
     RocketPlayer.resetSpeed();
     GameArea.pressedKey();
     RocketPlayer.move();
