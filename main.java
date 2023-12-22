@@ -131,7 +131,7 @@ function updateGameArea(){
     RocketPlayer.resetSpeed();
     GameArea.pressedKey();
     RocketPlayer.move();
-    RocketPlayer.update();    
+    RocketPlayer.update();   
 }
 
 function findObjectSrc(objectType){
