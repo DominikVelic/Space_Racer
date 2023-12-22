@@ -7,7 +7,7 @@ function startGame() {
     RocketPlayer = new Player("rocket",0,0,240,240);
 }
 
-let GameArea = {
+var GameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
         this.canvas.width = 3940;
@@ -27,10 +27,10 @@ let GameArea = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     pressedKey : function(){
-        if (this.keys && this.keys[37]) {RocketPlayer.moveLeft();}
-        if (this.keys && this.keys[39]) {RocketPlayer.moveRight(); }
-        if (this.keys && this.keys[38]) {RocketPlayer.moveUp(); }
-        if (this.keys && this.keys[40]) {RocketPlayer.moveDown();}
+        if (this.keys && this.keys[234]) {RocketPlayer.moveLeft();}
+        if (this.keys && this.keys[235]) {RocketPlayer.moveRight(); }
+        if (this.keys && this.keys[232]) {RocketPlayer.moveUp(); }
+        if (this.keys && this.keys[233]) {RocketPlayer.moveDown();}
     }
 }
 
