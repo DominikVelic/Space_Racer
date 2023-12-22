@@ -27,10 +27,10 @@ var GameArea = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     pressedKey : function(){
-        if (this.keys && this.keys[234]) {RocketPlayer.moveLeft();}
-        if (this.keys && this.keys[235]) {RocketPlayer.moveRight(); }
-        if (this.keys && this.keys[232]) {RocketPlayer.moveUp(); }
-        if (this.keys && this.keys[233]) {RocketPlayer.moveDown();}
+        if (this.keys && this.keys[65]) {RocketPlayer.moveLeft();}
+        if (this.keys && this.keys[68]) {RocketPlayer.moveRight(); }
+        if (this.keys && this.keys[87]) {RocketPlayer.moveUp(); }
+        if (this.keys && this.keys[83]) {RocketPlayer.moveDown();}
     }
 }
 
