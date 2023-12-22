@@ -1,13 +1,16 @@
 console.log("loaded");
 
 let RocketPlayer;
+let objects=[];
+
+
 
 function startGame() {
     GameArea.start();
     RocketPlayer = new Player("rocket",0,0,240,240);
 }
 
-var GameArea = {
+let GameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
         this.canvas.width = 3940;
@@ -27,10 +30,10 @@ var GameArea = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     pressedKey : function(){
-        if (this.keys && this.keys[65]) {RocketPlayer.moveLeft();}
-        if (this.keys && this.keys[68]) {RocketPlayer.moveRight(); }
-        if (this.keys && this.keys[87]) {RocketPlayer.moveUp(); }
-        if (this.keys && this.keys[83]) {RocketPlayer.moveDown();}
+        if (this.keys && this.keys[37]) {RocketPlayer.moveLeft();}
+        if (this.keys && this.keys[39]) {RocketPlayer.moveRight(); }
+        if (this.keys && this.keys[38]) {RocketPlayer.moveUp(); }
+        if (this.keys && this.keys[40]) {RocketPlayer.moveDown();}
     }
 }
 
@@ -60,8 +63,12 @@ class Component {
     }
 
     move(){
-        this.x += this.speedX;
-        this.y += this.speedY;
+        if(this.x+this.speedX>=0 && this.x+this.speedX<=3940-this.width){
+            this.x += this.speedX;
+        }
+        if(this.y+this.speedY>=0&& this.y+this.speedY<=2160-this.height){
+            this.y += this.speedY;
+        }
     }
     
     resetSpeed() {
