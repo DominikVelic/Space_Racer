@@ -46,6 +46,17 @@ let GameArea = {
         if (this.keys && this.keys[68]) {RocketPlayer.moveRight(); }
         if (this.keys && this.keys[87]) {RocketPlayer.moveUp(); }
         if (this.keys && this.keys[83]) {RocketPlayer.moveDown();}
+    },
+    checkCollision : function(){
+        for(let i = 0; i < objects[levelIndex].length; i++){
+            if(RocketPlayer.isColliding(objects[levelIndex][i])){
+                this.stop();
+                break;
+            }
+        }
+    },
+    stop : function() {
+        clearInterval(this.interval);
     }
 }
 
@@ -137,6 +148,14 @@ class Player extends Component{
             this.y += this.speedY;
         }
     }
+
+    isColliding(Component){
+        return !(this.x > Component.x + Component.width ||
+                    this.x + this.width < Component.x ||
+                    this.y > Component.y + Component.height ||
+                    this.y + this.height < Component.y);
+    }
+
 };
 
 function updateGameArea(){
@@ -148,6 +167,7 @@ function updateGameArea(){
     }
     RocketPlayer.resetSpeed();
     GameArea.pressedKey();
+    GameArea.checkCollision();
     RocketPlayer.move();
     RocketPlayer.update();   
 }
@@ -155,8 +175,8 @@ function updateGameArea(){
 function findObjectSrc(objectType){
     switch(objectType){
         case 'rocket':
-        return './img/rocket_pixel.png';
-        break;
+            return './img/rocket_pixel.png';
+            break;
         case 'meteor':
             return './img/meteor.png';
             break;
