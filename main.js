@@ -1,11 +1,39 @@
 console.log("loaded");
 
-let RocketPlayer;
+let Player;
 let objects=[];
 let levelIndex=0;
 let numOfLevels=1;
 let canvasWidth = 3940;
 let canvasHeight = 2160;
+
+// tu mozu byt data z jsonu
+let levelData = [];
+let rocketData = [];
+
+
+// precita json a vlozi data do arrayov levelData a rocketData
+function loadLevels(){
+    fetch('./levels.json').then(response => {
+        if(response.ok){
+            return response.json();
+        }
+        return null;
+    }).then(result =>{
+        if(result != null){
+            result.levels.forEach(level => {
+                levelData.push(level);
+            })
+            result.rockets.forEach(rocket =>{
+                rocketData.push(rocket);
+            })
+        }
+        else{
+            console.error("response is empty");
+        }
+    })
+    
+}
 
 function fillObjects(){
     //načitanie jsonu/jsonov že každy prvok bude level ktory bude obsahovať objekty svojho levelu
@@ -18,7 +46,7 @@ function fillObjects(){
 
 function startGame() {
     GameArea.start();
-    RocketPlayer = new Player("rocket",1850,1900,240,240);
+    Player = new Rocket("rocket",1850,1900,240,240);
     fillObjects();
 }
 
@@ -42,14 +70,14 @@ let GameArea = {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     },
     pressedKey : function(){
-        if (this.keys && this.keys[65]) {RocketPlayer.moveLeft();}
-        if (this.keys && this.keys[68]) {RocketPlayer.moveRight(); }
-        if (this.keys && this.keys[87]) {RocketPlayer.moveUp(); }
-        if (this.keys && this.keys[83]) {RocketPlayer.moveDown();}
+        if (this.keys && this.keys[65]) {Player.moveLeft();}
+        if (this.keys && this.keys[68]) {Player.moveRight(); }
+        if (this.keys && this.keys[87]) {Player.moveUp(); }
+        if (this.keys && this.keys[83]) {Player.moveDown();}
     },
     checkCollision : function(){
         for(let i = 0; i < objects[levelIndex].length; i++){
-            if(RocketPlayer.isColliding(objects[levelIndex][i])){
+            if(Player.isColliding(objects[levelIndex][i])){
                 this.stop();
                 break;
             }
@@ -96,15 +124,15 @@ class Component {
 }
 
 // keby chceme pouzit tuto logiku znova tak som ju vlozil do tejto funkcie aby sa dala lahko pouzit znovu pre vsetky objekty
-function isInCanvasX(Component){
-    if(Component.x + Component.speedX >= 0 && Component.x + Component.speedX <= canvasWidth - Component.width){
+function isInCanvasX(component){
+    if(component.x + component.speedX >= 0 && component.x + component.speedX <= canvasWidth - component.width){
         return true;
     }
     return false;
 }
 
-function isInCanvasY(Component){
-    if(Component.y + Component.speedY >= 0 && Component.y + Component.speedY <= canvasHeight - Component.height){
+function isInCanvasY(component){
+    if(component.y + component.speedY >= 0 && component.y + component.speedY <= canvasHeight - component.height){
         return true;
     }
     return false;
@@ -120,7 +148,7 @@ class Meteor extends Component{
     }
 }
 
-class Player extends Component{
+class Rocket extends Component{
 
     constructor(objectType, x, y, width, height){
         super(objectType, x, y, width, height);
@@ -149,11 +177,11 @@ class Player extends Component{
         }
     }
 
-    isColliding(Component){
-        return !(this.x > Component.x + Component.width ||
-                    this.x + this.width < Component.x ||
-                    this.y > Component.y + Component.height ||
-                    this.y + this.height < Component.y);
+    isColliding(component){
+        return !(this.x > component.x + component.width ||
+                    this.x + this.width < component.x ||
+                    this.y > component.y + component.height ||
+                    this.y + this.height < component.y);
     }
 
 };
@@ -165,20 +193,20 @@ function updateGameArea(){
         objects[levelIndex][i].move();
         objects[levelIndex][i].update(); //do cyklu
     }
-    RocketPlayer.resetSpeed();
+    Player.resetSpeed();
     GameArea.pressedKey();
     GameArea.checkCollision();
-    RocketPlayer.move();
-    RocketPlayer.update();   
+    Player.move();
+    Player.update();   
 }
 
 function findObjectSrc(objectType){
     switch(objectType){
         case 'rocket':
             return './img/rocket_pixel.png';
-            break;
         case 'meteor':
             return './img/meteor.png';
-            break;
     }
 }
+
+readJSON();

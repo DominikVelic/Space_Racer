@@ -1,0 +1,35 @@
+{
+    "levels":[
+        {
+            "meteors": 10
+        },
+        {
+            "meteors": 20
+        },
+        {
+            "meteors": 30
+        },
+        {
+            "meteors": 40 
+        },
+        {
+            "meteors": 50
+        }
+    ],
+
+    "rockets":[
+        {
+            "name": "basic rocket",
+            "speed": 10
+        },
+        {
+            "name": "fast rocket",
+            "speed": 20
+        },
+        {
+            "name": "super rocket",
+            "speed": 40
+        }
+    ]
+}
+
