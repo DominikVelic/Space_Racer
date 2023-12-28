@@ -21,8 +21,6 @@ html, body{
 }
 
 canvas{
-    background-image: url(img/space.jpg);
-    background-size: cover;
     position: absolute;
     margin: auto;
     top: 0;

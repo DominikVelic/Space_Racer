@@ -39,10 +39,9 @@ function fillObjects(){
         objects[i]=[];
         //for number of objects in level abo daco take
         for (let j = 0; j < levelData[i].meteors; j++) {
-            objects[i][j]=new Meteor(getRandomNumFrom(0,3400),0,600,600,levelData[i].meteor_speed);   
+            objects[i][j]=new Meteor(0,0,600,600,levelData[i].meteor_speed);   
         }
     }
-    console.log(objects);
 }
 
 let Game = {
@@ -54,6 +53,7 @@ let Game = {
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGame, 10);
+        this.background = new Background(0,-4000,4000,8000);
         window.addEventListener('keydown', function (e) {
             Game.keys = (Game.keys || []);
             Game.keys[e.keyCode] = true;
@@ -65,6 +65,10 @@ let Game = {
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    },
+    drawBackground : function(){
+        this.background.moveUp();
+        this.background.draw();
     },
     pressedKey : function(){
         if (this.keys && this.keys[65]) {Player.moveLeft();}
@@ -116,6 +120,33 @@ class Component {
         this.speedY = 0;
     }
     
+}
+
+class Background extends Component{
+
+    constructor(x,y,width,height){
+        super(x,y,width,height);
+        this.transitionSpeed = 30;
+        this.imgSrc = "./img/space3.png"
+    }
+
+    draw() {
+        let ctx = Game.context;
+        let img = new Image();
+        img.onload = () => {
+            ctx.drawImage(img, this.x, this.y, this.width, this.height);
+            ctx.drawImage(img, this.x, this.y + this.height, this.width, this.height);
+        };
+        img.src = this.imgSrc;
+    }
+
+    moveUp(){
+        this.y += this.transitionSpeed;
+        if(this.y >= 0){
+            this.y = -this.height;
+        }
+        this.move();
+    }
 }
 
 // keby chceme pouzit tuto logiku znova tak som ju vlozil do tejto funkcie aby sa dala lahko pouzit znovu pre vsetky objekty
@@ -225,18 +256,13 @@ class Rocket extends Component{
 
 function updateGame(){
     Game.clear();
+    Game.drawBackground();
     Game.drawObjects();
     Player.resetSpeed();
     Game.pressedKey();
     Game.checkCollision();
     Player.move();
     Player.draw();   
-}
-
-function getRandomNumFrom(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min);
 }
 
 
