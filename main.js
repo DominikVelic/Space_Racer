@@ -38,7 +38,7 @@ function fillObjects(){
     for(let i = 0; i<levelData.length; i++){
         objects[i]=[];
         //for number of objects in level abo daco take
-        objects[i][0]=new Meteor(1850,0,600,600);
+        objects[i][0]=new Meteor(getRandomNumFrom(0,3400),0,600,600);
     }
 }
 
@@ -139,14 +139,16 @@ class Meteor extends Component{
     }
 
     draw() {
-        let ctx = Game.context;
-        let img = new Image();
-        ctx.strokeStyle = "white";
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
-        img.onload = () => {
-            ctx.drawImage(img, this.x, this.y, this.width, this.height);
-        };
-        img.src = this.imgSrc;
+        if(!this.gone){
+            let ctx = Game.context;
+            let img = new Image();
+            ctx.strokeStyle = "white";
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+            img.onload = () => {
+                ctx.drawImage(img, this.x, this.y, this.width, this.height);
+            };
+            img.src = this.imgSrc;
+        }
     }
     
     setSpeed(){
@@ -192,7 +194,7 @@ class Rocket extends Component{
         let img = new Image();
         ctx.strokeStyle = "white";
         ctx.font = '30px SpaceMission';
-        ctx.fillText('Your Text', this.x, this.y);
+        ctx.fillText('Lives: ', 100, 100);
         ctx.strokeRect(this.x, this.y, this.width, this.height);
         img.onload = () => {
             ctx.drawImage(img, this.x, this.y, this.width, this.height);
