@@ -3,27 +3,32 @@
         {
             "meteors": 10,
             "meteor_speed": 0.05,
-            "meteor_count": 2
+            "meteor_x": [0],
+            "meteor_y": [0]
         },
         {
             "meteors": 20,
             "meteor_speed": 0.1,
-            "meteor_count": 3
+            "meteor_x": [0],
+            "meteor_y": [0]
         },
         {
             "meteors": 30,
             "meteor_speed": 0.15,
-            "meteor_count": 4
+            "meteor_x": [0],
+            "meteor_y": [0]
         },
         {
             "meteors": 40,
             "meteor_speed": 0.3,
-            "meteor_count": 5 
+            "meteor_x": [0],
+            "meteor_y": [0]
         },
         {
             "meteors": 50,
             "meteor_speed": 0.5,
-            "meteor_count": 6
+            "meteor_x": [0],
+            "meteor_y": [0]
         }
     ]
 }

@@ -38,8 +38,11 @@ function fillObjects(){
     for(let i = 0; i<levelData.length; i++){
         objects[i]=[];
         //for number of objects in level abo daco take
-        objects[i][0]=new Meteor(getRandomNumFrom(0,3400),0,600,600);
+        for (let j = 0; j < levelData[i].meteors; j++) {
+            objects[i][j]=new Meteor(getRandomNumFrom(0,3400),0,600,600,levelData[i].meteor_speed);   
+        }
     }
+    console.log(objects);
 }
 
 let Game = {
@@ -80,11 +83,12 @@ let Game = {
     stop : function() {
         clearInterval(this.interval);
     },
-    moveObjects : function(){
+    drawObjects : function(){
+        //musi sa objavit len tolko meteorov aky je meteor_count v levelData, ak x,y meteoru je za canvasom, nastavi sa meteor.gone = true a nebude sa vykreslovat a moze zacat vykreslovat dalsi meteor v objects
         for(let i = 0; i<objects[levelIndex].length; i++){
+            objects[levelIndex][i].checkVisibility();
             objects[levelIndex][i].moveDown();
-            objects[levelIndex][i].move();
-            objects[levelIndex][i].draw(); //do cyklu
+            objects[levelIndex][i].draw();
         }
     },
 
@@ -130,15 +134,23 @@ function isInCanvasY(component){
 }
 
 class Meteor extends Component{
-    constructor(x, y, width, height){
+    constructor(x, y, width, height, moveSpeed){
         super(x, y, width, height);
-        this.moveSpeed = levelData[levelIndex].meteor_speed;
-        this.gone = false;
+        this.moveSpeed = moveSpeed;
+        this.visible = false;
         this.imgSrc = "./img/meteor_pixel2.png";
+        this.hitbox = null;//todo: vypln hitbox
+    }
+
+    checkVisibility(){
+        if(this.y >= 0)
+            this.visible = true;
+        if(this.y <= canvasHeight)
+            this.visible = false;
     }
 
     draw() {
-        if(!this.gone){
+        if(!this.visible){
             let ctx = Game.context;
             let img = new Image();
             ctx.strokeStyle = "white";
@@ -155,6 +167,7 @@ class Meteor extends Component{
     }
     moveDown() {
         this.speedY += this.moveSpeed;
+        this.move();
     }
 }
 
@@ -164,6 +177,7 @@ class Rocket extends Component{
         super(x, y, width, height);
         this.moveSpeed = 40;
         this.imgSrc = "./img/rocket_pixel.png";
+        this.hitbox = null;//todo: vypln hitbox
     }
 
     moveUp(){
@@ -200,6 +214,7 @@ class Rocket extends Component{
     }
 
     isCollidingWith(component){
+        //todo: naprav logiku pre hitbox
         return !(this.x > component.x + component.width ||
                     this.x + this.width < component.x ||
                     this.y > component.y + component.height ||
@@ -210,7 +225,7 @@ class Rocket extends Component{
 
 function updateGame(){
     Game.clear();
-    Game.moveObjects();
+    Game.drawObjects();
     Player.resetSpeed();
     Game.pressedKey();
     Game.checkCollision();
