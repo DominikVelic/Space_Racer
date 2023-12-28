@@ -44,9 +44,8 @@ function fillObjects(){
 
 let Game = {
     canvas : document.createElement("canvas"),
-    
     start : function() {
-        Player = new Rocket(1850,1900,400,400);
+        Player = new Rocket(1850,1900,400,600);
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
         this.context = this.canvas.getContext("2d");
@@ -135,7 +134,7 @@ class Meteor extends Component{
         super(x, y, width, height);
         this.moveSpeed = levelData[levelIndex].meteor_speed;
         this.gone = false;
-        this.imgSrc = "./img/meteor.png";
+        this.imgSrc = "./img/meteor_pixel2.png";
     }
 
     draw() {
@@ -193,8 +192,6 @@ class Rocket extends Component{
         let ctx = Game.context;
         let img = new Image();
         ctx.strokeStyle = "white";
-        ctx.font = '30px SpaceMission';
-        ctx.fillText('Lives: ', 100, 100);
         ctx.strokeRect(this.x, this.y, this.width, this.height);
         img.onload = () => {
             ctx.drawImage(img, this.x, this.y, this.width, this.height);
