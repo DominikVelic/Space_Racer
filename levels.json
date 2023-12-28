@@ -1,34 +1,29 @@
 {
     "levels":[
         {
-            "meteors": 10
+            "meteors": 10,
+            "meteor_speed": 0.05,
+            "meteor_count": 2
         },
         {
-            "meteors": 20
+            "meteors": 20,
+            "meteor_speed": 0.1,
+            "meteor_count": 3
         },
         {
-            "meteors": 30
+            "meteors": 30,
+            "meteor_speed": 0.15,
+            "meteor_count": 4
         },
         {
-            "meteors": 40 
+            "meteors": 40,
+            "meteor_speed": 0.3,
+            "meteor_count": 5 
         },
         {
-            "meteors": 50
-        }
-    ],
-
-    "rockets":[
-        {
-            "name": "basic rocket",
-            "speed": 10
-        },
-        {
-            "name": "fast rocket",
-            "speed": 20
-        },
-        {
-            "name": "super rocket",
-            "speed": 40
+            "meteors": 50,
+            "meteor_speed": 0.5,
+            "meteor_count": 6
         }
     ]
 }

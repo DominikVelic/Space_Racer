@@ -3,68 +3,63 @@ console.log("loaded");
 let Player;
 let objects=[];
 let levelIndex=0;
-let numOfLevels=1;
-let canvasWidth = 3940;
-let canvasHeight = 2160;
-
+let canvasWidth = 4000;
+let canvasHeight = 4000;
 // tu mozu byt data z jsonu
 let levelData = [];
-let rocketData = [];
-
 
 // precita json a vlozi data do arrayov levelData a rocketData
-function loadLevels(){
-    fetch('./levels.json').then(response => {
+function loadGame(){
+    fetch('./levels.json')
+    .then(response => {
         if(response.ok){
             return response.json();
         }
-        return null;
-    }).then(result =>{
+        else{
+            throw new Error("Failed to fetch resource");
+        }
+    })
+    .then(result =>{
         if(result != null){
             result.levels.forEach(level => {
                 levelData.push(level);
             })
-            result.rockets.forEach(rocket =>{
-                rocketData.push(rocket);
-            })
+            Game.start();
         }
-        else{
-            console.error("response is empty");
-        }
+    
     })
+    .catch(error => console.error(error));
     
 }
 
+
 function fillObjects(){
     //načitanie jsonu/jsonov že každy prvok bude level ktory bude obsahovať objekty svojho levelu
-    for(let i = 0; i<numOfLevels; i++){
+    for(let i = 0; i<levelData.length; i++){
         objects[i]=[];
         //for number of objects in level abo daco take
-        objects[i][0]=new Meteor("meteor",1850,0,400,400);
+        objects[i][0]=new Meteor(1850,0,600,600);
     }
 }
 
-function startGame() {
-    GameArea.start();
-    Player = new Rocket("rocket",1850,1900,240,240);
-    fillObjects();
-}
-
-let GameArea = {
+let Game = {
     canvas : document.createElement("canvas"),
+    
     start : function() {
+        Player = new Rocket(1850,1900,400,400);
         this.canvas.width = canvasWidth;
         this.canvas.height = canvasHeight;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(updateGameArea, 10);
+        this.interval = setInterval(updateGame, 10);
         window.addEventListener('keydown', function (e) {
-            GameArea.keys = (GameArea.keys || []);
-            GameArea.keys[e.keyCode] = true;
+            Game.keys = (Game.keys || []);
+            Game.keys[e.keyCode] = true;
           })
         window.addEventListener('keyup', function (e) {
-            GameArea.keys[e.keyCode] = false;
+            Game.keys[e.keyCode] = false;
         })
+        fillObjects();
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -77,7 +72,7 @@ let GameArea = {
     },
     checkCollision : function(){
         for(let i = 0; i < objects[levelIndex].length; i++){
-            if(Player.isColliding(objects[levelIndex][i])){
+            if(Player.isCollidingWith(objects[levelIndex][i])){
                 this.stop();
                 break;
             }
@@ -85,32 +80,29 @@ let GameArea = {
     },
     stop : function() {
         clearInterval(this.interval);
-    }
+    },
+    moveObjects : function(){
+        for(let i = 0; i<objects[levelIndex].length; i++){
+            objects[levelIndex][i].moveDown();
+            objects[levelIndex][i].move();
+            objects[levelIndex][i].draw(); //do cyklu
+        }
+    },
+
 }
 
 class Component {
     
-    constructor(objectType, x, y, width, height) {
+    constructor(x, y, width, height) {
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
         this.speedX = 0;
         this.speedY = 0;
-        this.imgSrc = findObjectSrc(objectType);
+
     }
     
-    update() {
-        let ctx = GameArea.context;
-        let img = new Image();
-        ctx.strokeStyle = "white";
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
-        img.onload = () => {
-            ctx.drawImage(img, this.x, this.y, this.width, this.height);
-        };
-        img.src = this.imgSrc;
-    }
-
     move(){
         this.x += this.speedX;
         this.y += this.speedY;
@@ -139,9 +131,26 @@ function isInCanvasY(component){
 }
 
 class Meteor extends Component{
-    constructor(objectType, x, y, width, height){
-        super(objectType, x, y, width, height);
-        this.moveSpeed = 0.05;
+    constructor(x, y, width, height){
+        super(x, y, width, height);
+        this.moveSpeed = levelData[levelIndex].meteor_speed;
+        this.gone = false;
+        this.imgSrc = "./img/meteor.png";
+    }
+
+    draw() {
+        let ctx = Game.context;
+        let img = new Image();
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        img.onload = () => {
+            ctx.drawImage(img, this.x, this.y, this.width, this.height);
+        };
+        img.src = this.imgSrc;
+    }
+    
+    setSpeed(){
+        this.moveSpeed = levelData[levelIndex].meteor_speed;
     }
     moveDown() {
         this.speedY += this.moveSpeed;
@@ -150,9 +159,10 @@ class Meteor extends Component{
 
 class Rocket extends Component{
 
-    constructor(objectType, x, y, width, height){
-        super(objectType, x, y, width, height);
-        this.moveSpeed = 30;
+    constructor(x, y, width, height){
+        super(x, y, width, height);
+        this.moveSpeed = 40;
+        this.imgSrc = "./img/rocket_pixel.png";
     }
 
     moveUp(){
@@ -177,7 +187,20 @@ class Rocket extends Component{
         }
     }
 
-    isColliding(component){
+    draw() {
+        let ctx = Game.context;
+        let img = new Image();
+        ctx.strokeStyle = "white";
+        ctx.font = '30px SpaceMission';
+        ctx.fillText('Your Text', this.x, this.y);
+        ctx.strokeRect(this.x, this.y, this.width, this.height);
+        img.onload = () => {
+            ctx.drawImage(img, this.x, this.y, this.width, this.height);
+        };
+        img.src = this.imgSrc;
+    }
+
+    isCollidingWith(component){
         return !(this.x > component.x + component.width ||
                     this.x + this.width < component.x ||
                     this.y > component.y + component.height ||
@@ -186,27 +209,20 @@ class Rocket extends Component{
 
 };
 
-function updateGameArea(){
-    GameArea.clear();
-    for(let i = 0; i<objects[levelIndex].length; i++){
-        objects[levelIndex][i].moveDown();
-        objects[levelIndex][i].move();
-        objects[levelIndex][i].update(); //do cyklu
-    }
+function updateGame(){
+    Game.clear();
+    Game.moveObjects();
     Player.resetSpeed();
-    GameArea.pressedKey();
-    GameArea.checkCollision();
+    Game.pressedKey();
+    Game.checkCollision();
     Player.move();
-    Player.update();   
+    Player.draw();   
 }
 
-function findObjectSrc(objectType){
-    switch(objectType){
-        case 'rocket':
-            return './img/rocket_pixel.png';
-        case 'meteor':
-            return './img/meteor.png';
-    }
+function getRandomNumFrom(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
-readJSON();
+
