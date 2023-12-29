@@ -225,8 +225,16 @@ class Player extends Component{
         this.moveSpeed = 40;
         this.imgSrc = "./img/rocket_pixel.png";
         this.hitbox = [
-            {x: this.x+(this.width/2), y: this.y}
-        ];;//todo: vypln hitbox
+            {x: this.x+(this.width/2), y: (this.y+20)},
+            {x: (this.x+140), y: (this.y+90)},
+            {x: (this.x+110), y: (this.y+330)},
+            {x: (this.x+30), y: (this.y+410)},
+            {x: (this.x+140), y: (this.y+440)},
+            {x: (this.x+260), y: (this.y+90)},
+            {x: (this.x+290), y: (this.y+330)},
+            {x: (this.x+370), y: (this.y+410)},
+            {x: (this.x+260), y: (this.y+440)},
+        ];;
     }
 
     moveUp(){
@@ -250,8 +258,16 @@ class Player extends Component{
             this.y += this.speedY;
         }
         this.hitbox = [
-            {x: this.x+(this.width/2), y: this.y}
-        ];
+            {x: this.x+(this.width/2), y: (this.y+20)},
+            {x: (this.x+140), y: (this.y+90)},
+            {x: (this.x+110), y: (this.y+330)},
+            {x: (this.x+30), y: (this.y+410)},
+            {x: (this.x+140), y: (this.y+440)},
+            {x: (this.x+260), y: (this.y+90)},
+            {x: (this.x+290), y: (this.y+330)},
+            {x: (this.x+370), y: (this.y+410)},
+            {x: (this.x+260), y: (this.y+440)},
+        ];;
     }
 
     draw() {
@@ -281,13 +297,12 @@ class Player extends Component{
     }
 
     isCollidingWith(component){
-            
-        for(var i=0;i<Player.hitbox.length; i++){
+        for(var i=0;i<this.hitbox.length; i++){
             if (
-                Player.hitbox[i].x < component.x + component.width &&
-                Player.hitbox[i].x > component.x &&
-                Player.hitbox[i].y < component.y + component.height &&
-                Player.hitbox[i].y > component.y
+                this.hitbox[i].x < component.x + component.width &&
+                this.hitbox[i].x > component.x &&
+                this.hitbox[i].y < component.y + component.height &&
+                this.hitbox[i].y > component.y
               ){
                 return true;
             } 
