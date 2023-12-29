@@ -262,11 +262,11 @@ class Player extends Component{
             {x: (this.x+140), y: (this.y+90)},
             {x: (this.x+110), y: (this.y+330)},
             {x: (this.x+30), y: (this.y+410)},
-            {x: (this.x+140), y: (this.y+440)},
+            {x: (this.x+140), y: (this.y+460)},
             {x: (this.x+260), y: (this.y+90)},
             {x: (this.x+290), y: (this.y+330)},
             {x: (this.x+370), y: (this.y+410)},
-            {x: (this.x+260), y: (this.y+440)},
+            {x: (this.x+260), y: (this.y+460)},
         ];;
     }
 
