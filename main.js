@@ -297,19 +297,16 @@ class Player extends Component{
     }
 
     isCollidingWith(component){
+        var centerX=component.x+(component.width/2);
+        var centerY=component.y+(component.height/2);
         for(var i=0;i<this.hitbox.length; i++){
-            if (
-                this.hitbox[i].x < component.x + component.width &&
-                this.hitbox[i].x > component.x &&
-                this.hitbox[i].y < component.y + component.height &&
-                this.hitbox[i].y > component.y
-              ){
+            var distance = Math.sqrt((this.hitbox[i].x - centerX) ** 2 + (this.hitbox[i].y - centerY) ** 2);
+            if(distance < (component.width/2)){
                 return true;
-            } 
+            }
         }
         return false;
-    }
-        
+    }  
 };
 
 
