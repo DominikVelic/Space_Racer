@@ -170,7 +170,12 @@ class Meteor extends Component{
         this.moveSpeed = moveSpeed;
         this.visible = false;
         this.imgSrc = "./img/meteor_pixel2.png";
-        this.hitbox = null;//todo: vypln hitbox
+        this.hitbox = [
+            {x: this.x, y: this.y},
+            {x: this.y+this.width, y: this.y},
+            {x: this.x+this.width, y: this.y+this.height},
+            {x: this.x, y: this.y+this.height}
+        ];;//todo: vypln hitbox
     }
 
     checkVisibility(){
@@ -198,6 +203,12 @@ class Meteor extends Component{
     }
     moveDown() {
         this.speedY += this.moveSpeed;
+        this.hitbox = [
+            {x: this.x, y: this.y},
+            {x: this.y+this.width, y: this.y},
+            {x: this.x+this.width, y: this.y+this.height},
+            {x: this.x, y: this.y+this.height}
+        ];
         this.move();
     }
 }
@@ -208,7 +219,9 @@ class Rocket extends Component{
         super(x, y, width, height);
         this.moveSpeed = 40;
         this.imgSrc = "./img/rocket_pixel.png";
-        this.hitbox = null;//todo: vypln hitbox
+        this.hitbox = [
+            {x: this.x+(this.width/2), y: this.y}
+        ];;//todo: vypln hitbox
     }
 
     moveUp(){
@@ -231,6 +244,9 @@ class Rocket extends Component{
         if(isInCanvasY(this)){
             this.y += this.speedY;
         }
+        this.hitbox = [
+            {x: this.x+(this.width/2), y: this.y}
+        ];
     }
 
     draw() {
@@ -245,13 +261,20 @@ class Rocket extends Component{
     }
 
     isCollidingWith(component){
-        //todo: naprav logiku pre hitbox
-        return !(this.x > component.x + component.width ||
-                    this.x + this.width < component.x ||
-                    this.y > component.y + component.height ||
-                    this.y + this.height < component.y);
+            
+        for(var i=0;i<Player.hitbox.length; i++){
+            if (
+                Player.hitbox[i].x < component.x + component.width &&
+                Player.hitbox[i].x > component.x &&
+                Player.hitbox[i].y < component.y + component.height &&
+                Player.hitbox[i].y > component.y
+              ){
+                return true;
+            } 
+        }
+        return false;
     }
-
+        
 };
 
 function updateGame(){
