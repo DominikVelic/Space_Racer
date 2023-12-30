@@ -61,7 +61,7 @@ class Game {
         for (let i = 0; i < levelData.length; i++) {
             this.objects[i] = [];
             for (let j = 0; j < levelData[i].meteors; j++) {
-                this.objects[i][j] = new Meteor(0, 0, 600, 600, levelData[i].meteor_speed, this);
+                this.objects[i][j] = new Meteor(levelData[i].meteor_x[j], levelData[i].meteor_y[j], 600, 600, levelData[i].meteor_speed, this);
             }
         }
     }
