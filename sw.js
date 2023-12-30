@@ -11,6 +11,7 @@ self.addEventListener('install', function(event) {
           '/~xvelic/WEBTE-hra/img/meteor.png',
           '/~xvelic/WEBTE-hra/img/rocket.png',
           '/~xvelic/WEBTE-hra/img/space.png',
+          '/~xvelic/WEBTE-hra/img/space_icon.png',
           '/~xvelic/WEBTE-hra/space-mission-font/SpaceMission-rgyw9.otf',
         ]);
       })

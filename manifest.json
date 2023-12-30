@@ -3,44 +3,15 @@
     "name": "Space Racer",
     "icons": [
         {
-            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
-            "type": "image/png",
-            "sizes": "48x48"
-        },
-        {
-            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
-            "type": "image/png",
-            "sizes": "72x72"
-        },
-        {
-            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
-            "type": "image/png",
-            "sizes": "96x96"
-        },
-        {
-            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
-            "type": "image/png",
-            "sizes": "128x128"
-        },
-        {
-            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
+            "src": "/~xvelic/WEBTE-hra/img/rocket_icon.png",
             "type": "image/png",
             "sizes": "192x192"
-        },
-        {
-            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
-            "type": "image/png",
-            "sizes": "256x256"
-        },
-        {
-            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
-            "type": "image/png",
-            "sizes": "512x512"
         }
     ],
     "start_url": "/~xvelic/WEBTE-hra/index.html",
     "background_color": "#3367D6",
     "display": "standalone",
     "scope": "/~xvelic/WEBTE-hra/",
-    "theme_color": "#3367D6"
-  }
+    "theme_color": "#3367D6",
+    "purpose": "any maskable"
+}

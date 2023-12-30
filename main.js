@@ -110,6 +110,7 @@ class Game {
         for (let i = 0; i < this.objects[this.levelIndex].length; i++) {
             if (this.player.isCollidingWith(this.objects[this.levelIndex][i])) {
                 this.stop();
+                //todo: Game Over screen
                 break;
             }
         }
@@ -117,6 +118,19 @@ class Game {
 
     stop() {
         clearInterval(this.interval);
+    }
+
+    //todo: MenuScreen
+    menuScreen(){
+        if(this.interval)
+            this.stop();
+        drawMenuScreen();
+    }
+
+    drawMenuScreen(){
+        this.drawBackground();
+        this.context.drawImage();
+
     }
 
     updateObjects() {
