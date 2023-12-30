@@ -29,6 +29,9 @@ function loadGame(){
 
 class Game {
     constructor(canvasWidth,canvasHeight) {
+        this.gyroscope = new Gyroscope({frequency: 60});
+        this.gyroscope.addEventListener("reading", (e) => {this.handleReading()});
+        this.gyroscope.start();
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
         this.player = null;
@@ -39,6 +42,21 @@ class Game {
         this.canvasHeight = canvasHeight;
         this.objects = [];
         this.levelIndex = 0;
+    }
+
+    handleReading(){
+        if (this.gyroscope.x > 0) {
+            this.player.moveRight();
+        }
+        if (this.gyroscope.y > 0) {
+            this.player.moveUp();
+        }
+        if(this.gyroscope.x < 0){
+            this.player.moveLeft();
+        }
+        if(this.gyroscope.y < 0){
+            this.player.moveDown();
+        }
     }
 
     start() {
