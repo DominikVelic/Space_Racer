@@ -1,7 +1,7 @@
 console.log("loaded");
 
 if('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register('./sw.js')
     .then(function() { console.log("Service Worker Registered"); });
 }
 class Game {
@@ -15,7 +15,7 @@ class Game {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.objects = [];
-        this.levelIndex = 0;
+        this.levelIndex = 1;
     }
 
     handleReading(){

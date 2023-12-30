@@ -3,44 +3,44 @@
     "name": "Space Racer",
     "icons": [
         {
-            "src": "/img/rocket.png",
+            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
             "type": "image/png",
             "sizes": "48x48"
         },
         {
-            "src": "/img/rocket.png",
+            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
             "type": "image/png",
             "sizes": "72x72"
         },
         {
-            "src": "/img/rocket.png",
+            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
             "type": "image/png",
             "sizes": "96x96"
         },
         {
-            "src": "/img/rocket.png",
+            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
             "type": "image/png",
             "sizes": "128x128"
         },
         {
-            "src": "/img/rocket.png",
+            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "/img/rocket.png",
+            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
             "type": "image/png",
             "sizes": "256x256"
         },
         {
-            "src": "/img/rocket.png",
+            "src": "/~xvelic/WEBTE-hra/img/rocket.png",
             "type": "image/png",
             "sizes": "512x512"
         }
     ],
-    "start_url": "/index.html",
+    "start_url": "/~xvelic/WEBTE-hra/index.html",
     "background_color": "#3367D6",
     "display": "standalone",
-    "scope": "/",
+    "scope": "/~xvelic/WEBTE-hra/",
     "theme_color": "#3367D6"
   }
