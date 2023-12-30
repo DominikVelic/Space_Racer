@@ -1,37 +1,7 @@
 console.log("loaded");
-// tu mozu byt data z jsonu
-let levelData = [];
-
-// precita json a vlozi data do arrayov levelData a rocketData
-function loadGame(){
-    fetch('./levels.json')
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        }
-        else{
-            throw new Error("Failed to fetch resource");
-        }
-    })
-    .then(result =>{
-        if(result != null){
-            result.levels.forEach(level => {
-                levelData.push(level);
-            })
-            game = new Game(4000,4000);
-            game.start();
-        }
-    
-    })
-    .catch(error => console.error(error));
-    
-}
-
 class Game {
     constructor(canvasWidth,canvasHeight) {
-        this.gyroscope = new Gyroscope({frequency: 60});
-        this.gyroscope.addEventListener("reading", (e) => {this.handleReading()});
-        this.gyroscope.start();
+        this.initGyroscope();
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
         this.player = null;
@@ -58,14 +28,20 @@ class Game {
             this.player.moveDown();
         }
     }
+    
+    initGyroscope(){
+        this.gyroscope = new Gyroscope({frequency: 60});
+        this.gyroscope.addEventListener("reading", (e) => {this.handleReading()});
+        this.gyroscope.start();
+    }
 
     start() {
         this.player = new Player(1850, 1900, 400, 600, this);
         this.canvas.width = this.canvasWidth;
         this.canvas.height = this.canvasHeight;
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(() => this.updateGame(), 10);
-        this.background = new Background(0, -4000, 4000, 8000);
+        this.interval = setInterval(() => this.updateGame(), 20);
+        this.background = new Background(0, -4000, 4000, 8000,this);
         window.addEventListener('keydown', (e) => {
             this.keys[e.keyCode] = true;
         });
@@ -76,12 +52,30 @@ class Game {
     }
 
     fillObjects() {
-        for (let i = 0; i < levelData.length; i++) {
-            this.objects[i] = [];
-            for (let j = 0; j < levelData[i].meteors; j++) {
-                this.objects[i][j] = new Meteor(levelData[i].meteor_x[j], levelData[i].meteor_y[j], 600, 600, levelData[i].meteor_speed, this);
+        fetch('./levels.json')
+        .then(response => {
+            if(response.ok){
+                return response.json();
             }
-        }
+            else{
+                throw new Error("Failed to fetch resource");
+            }
+        })
+        .then(result =>{
+            if(result != null){
+                let levelData = result.levels;
+                for (let i = 0; i < levelData.length; i++) {
+                    this.objects[i] = [];
+                    for (let j = 0; j < levelData[i].meteors; j++) {
+                        this.objects[i][j] = new Meteor(levelData[i].meteor_x[j], levelData[i].meteor_y[j], 600, 600, levelData[i].meteor_speed, this);
+                    }
+                }
+            }
+    
+        })
+        .catch(error => console.error(error));
+
+        
     }
 
     clear() {
@@ -163,17 +157,18 @@ class Background extends Component{
     constructor(x,y,width,height,game){
         super(x,y,width,height,game);
         this.transitionSpeed = 30;
-        this.imgSrc = "./img/space3.png"
+        this.imgSrc = "./img/space3.png";
+        this.img = new Image();
+        this.img.src = this.imgSrc;
+        this.img.onload = () => this.loaded = true;
+        this.loaded = false;
     }
 
     draw() {
-        let ctx = game.context;
-        let img = new Image();
-        img.onload = () => {
-            ctx.drawImage(img, this.x, this.y, this.width, this.height);
-            ctx.drawImage(img, this.x, this.y + this.height, this.width, this.height);
-        };
-        img.src = this.imgSrc;
+        if (!this.loaded) return;
+        let ctx = this.game.context;
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.img, this.x, this.y + this.height, this.width, this.height);
     }
 
     moveUp(){
@@ -198,7 +193,11 @@ class Meteor extends Component{
             {x: this.y+this.width, y: this.y},
             {x: this.x+this.width, y: this.y+this.height},
             {x: this.x, y: this.y+this.height}
-        ];;//todo: vypln hitbox
+        ];
+        this.img = new Image();
+        this.img.src = this.imgSrc;
+        this.img.onload = () => this.loaded = true;
+        this.loaded = false;
     }
 
     checkVisibility(){
@@ -209,21 +208,13 @@ class Meteor extends Component{
     }
 
     draw() {
+        if (!this.loaded) return;
+        let ctx = this.game.context;
         if(!this.visible){
-            let ctx = game.context;
-            let img = new Image();
-            ctx.strokeStyle = "white";
-            ctx.strokeRect(this.x, this.y, this.width, this.height);
-            img.onload = () => {
-                ctx.drawImage(img, this.x, this.y, this.width, this.height);
-            };
-            img.src = this.imgSrc;
+            ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
         }
     }
-    
-    setSpeed(){
-        this.moveSpeed = levelData[levelIndex].meteor_speed;
-    }
+
     moveDown() {
         this.speedY += this.moveSpeed;
         this.hitbox = [
@@ -239,7 +230,7 @@ class Meteor extends Component{
 class Player extends Component{
 
     constructor(x, y, width, height,game){
-        super(x, y, width, height,game);
+        super(x, y, width, height, game);
         this.moveSpeed = 40;
         this.imgSrc = "./img/rocket_pixel.png";
         this.hitbox = [
@@ -252,7 +243,11 @@ class Player extends Component{
             {x: (this.x+290), y: (this.y+330)},
             {x: (this.x+370), y: (this.y+410)},
             {x: (this.x+260), y: (this.y+440)},
-        ];;
+        ];
+        this.img = new Image();
+        this.img.src = this.imgSrc;
+        this.img.onload = () => this.loaded = true;
+        this.loaded = false;
     }
 
     moveUp(){
@@ -289,14 +284,10 @@ class Player extends Component{
     }
 
     draw() {
-        let ctx = game.context;
-        let img = new Image();
-        ctx.strokeStyle = "white";
-        ctx.strokeRect(this.x, this.y, this.width, this.height);
-        img.onload = () => {
-            ctx.drawImage(img, this.x, this.y, this.width, this.height);
-        };
-        img.src = this.imgSrc;
+        if (!this.loaded) return;
+        let ctx = this.game.context;
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        
     }
 
     // keby chceme pouzit tuto logiku znova tak som ju vlozil do tejto funkcie aby sa dala lahko pouzit znovu pre vsetky objekty
@@ -326,6 +317,11 @@ class Player extends Component{
         return false;
     }  
 };
+
+function startGame(){
+    let game = new Game(4000,4000);
+    game.start();
+}
 
 
 
