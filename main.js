@@ -1,4 +1,9 @@
 console.log("loaded");
+
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+    .then(function() { console.log("Service Worker Registered"); });
+}
 class Game {
     constructor(canvasWidth,canvasHeight) {
         this.initGyroscope();
@@ -47,7 +52,7 @@ class Game {
     }
 
     start() {
-        this.player = new Player(1850, 1900, 400, 600, this);
+        this.player = new Player(1850, 1900, 500, 600, this);
         this.canvas.width = this.canvasWidth;
         this.canvas.height = this.canvasHeight;
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
@@ -78,7 +83,15 @@ class Game {
             }
     
         })
-        .catch(error => console.error(error));
+        .catch(error => {
+            return caches.match('./levels.json').then(function(response) {
+                if(response) {
+                  return response.json();
+                } else {
+                  console.error("Resource not in cache");
+                }
+            });
+        });
 
         
     }
@@ -150,7 +163,7 @@ class Background extends Component{
 
     constructor(x,y,width,height,game){
         super(x,y,width,height,game);
-        this.transitionSpeed = 30;
+        this.transitionSpeed = 100;
         this.imgSrc = "./img/space3.png";
         this.img = new Image();
         this.img.src = this.imgSrc;
@@ -180,7 +193,7 @@ class Meteor extends Component{
     constructor(x, y, width, height, moveSpeed,game){
         super(x, y, width, height,game);
         this.moveSpeed = moveSpeed;
-        this.imgSrc = "./img/meteor_pixel2.png";
+        this.imgSrc = "./img/meteor.png";
         this.hitbox = [
             {x: this.x, y: this.y},
             {x: this.y+this.width, y: this.y},
@@ -237,7 +250,7 @@ class Player extends Component{
     constructor(x, y, width, height,game){
         super(x, y, width, height, game);
         this.moveSpeed = 40;
-        this.imgSrc = "./img/rocket_pixel.png";
+        this.imgSrc = "./img/rocket.png";
         this.hitbox = [
             {x: this.x+(this.width/2), y: (this.y+20)},
             {x: (this.x+140), y: (this.y+90)},
