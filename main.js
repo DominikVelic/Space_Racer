@@ -5,7 +5,6 @@ class Game {
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
         this.player = null;
-        this.keys = [];
         this.interval = null;
         this.background = null;
         this.canvasWidth = canvasWidth;
@@ -30,9 +29,21 @@ class Game {
     }
     
     initGyroscope(){
-        this.gyroscope = new Gyroscope({frequency: 60});
-        this.gyroscope.addEventListener("reading", (e) => {this.handleReading()});
-        this.gyroscope.start();
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", function(event) {
+                // beta: front back motion
+                const frontToBack = event.beta;
+                // gamma: left to right
+                const leftToRight = event.gamma;
+        
+                if (frontToBack > 0) { this.player.moveUp(); }
+                if (leftToRight > 0) { this.player.moveRight(); }
+                if (frontToBack < 0) { this.player.moveDown(); }
+                if (leftToRight < 0) { this.player.moveLeft(); }
+                
+            }, true);
+        }
+        
     }
 
     start() {
@@ -42,12 +53,6 @@ class Game {
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(() => this.updateGame(), 20);
         this.background = new Background(0, -4000, 4000, 8000,this);
-        window.addEventListener('keydown', (e) => {
-            this.keys[e.keyCode] = true;
-        });
-        window.addEventListener('keyup', (e) => {
-            this.keys[e.keyCode] = false;
-        });
         this.fillObjects();
     }
 
@@ -87,13 +92,7 @@ class Game {
         this.background.draw();
     }
 
-    pressedKey() {
-        if (this.keys && this.keys[65]) { this.player.moveLeft(); }
-        if (this.keys && this.keys[68]) { this.player.moveRight(); }
-        if (this.keys && this.keys[87]) { this.player.moveUp(); }
-        if (this.keys && this.keys[83]) { this.player.moveDown(); }
-    }
-
+    
     checkCollision() {
         for (let i = 0; i < this.objects[this.levelIndex].length; i++) {
             if (this.player.isCollidingWith(this.objects[this.levelIndex][i])) {
@@ -107,23 +106,18 @@ class Game {
         clearInterval(this.interval);
     }
 
-    drawObjects() {
+    updateObjects() {
         for (let i = 0; i < this.objects[this.levelIndex].length; i++) {
-            this.objects[this.levelIndex][i].checkVisibility();
-            this.objects[this.levelIndex][i].moveDown();
-            this.objects[this.levelIndex][i].draw();
+            this.objects[this.levelIndex][i].update();
         }
     }
 
     updateGame() {
         this.clear();
         this.drawBackground();
-        this.drawObjects();
-        this.player.resetSpeed();
-        this.pressedKey();
+        this.updateObjects();
         this.checkCollision();
-        this.player.move();
-        this.player.draw();
+        this.player.update();
     }
 }
 
@@ -186,7 +180,6 @@ class Meteor extends Component{
     constructor(x, y, width, height, moveSpeed,game){
         super(x, y, width, height,game);
         this.moveSpeed = moveSpeed;
-        this.visible = false;
         this.imgSrc = "./img/meteor_pixel2.png";
         this.hitbox = [
             {x: this.x, y: this.y},
@@ -198,21 +191,23 @@ class Meteor extends Component{
         this.img.src = this.imgSrc;
         this.img.onload = () => this.loaded = true;
         this.loaded = false;
+        this.inGame = true;
     }
 
     checkVisibility(){
-        if(this.y >= 0)
-            this.visible = true;
         if(this.y <= this.game.canvas.height)
-            this.visible = false;
+            this.inGame = true;
+        else{
+            this.inGame = false;
+        }
+
     }
 
     draw() {
-        if (!this.loaded) return;
+        if (!this.loaded || this.y < -this.height) return;
         let ctx = this.game.context;
-        if(!this.visible){
-            ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-        }
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        
     }
 
     moveDown() {
@@ -224,6 +219,16 @@ class Meteor extends Component{
             {x: this.x, y: this.y+this.height}
         ];
         this.move();
+
+    }
+
+    update(){
+        this.checkVisibility();
+        if(this.inGame){
+            this.resetSpeed();
+            this.moveDown();
+            this.draw();
+        }
     }
 }
 
@@ -244,10 +249,26 @@ class Player extends Component{
             {x: (this.x+370), y: (this.y+410)},
             {x: (this.x+260), y: (this.y+440)},
         ];
+        window.addEventListener('keydown', (e) => {
+            this.keys[e.keyCode] = true;
+            
+        });
+        window.addEventListener('keyup', (e) => {
+            this.keys[e.keyCode] = false;
+            
+        });
         this.img = new Image();
         this.img.src = this.imgSrc;
         this.img.onload = () => this.loaded = true;
         this.loaded = false;
+        this.keys = [];
+    }
+
+    pressedKey() {
+        if (this.keys && this.keys[65]) { this.moveLeft(); }
+        if (this.keys && this.keys[68]) { this.moveRight(); }
+        if (this.keys && this.keys[87]) { this.moveUp(); }
+        if (this.keys && this.keys[83]) { this.moveDown(); }
     }
 
     moveUp(){
@@ -316,6 +337,13 @@ class Player extends Component{
         }
         return false;
     }  
+
+    update(){
+        this.resetSpeed();
+        this.pressedKey();
+        this.move();
+        this.draw();
+    }
 };
 
 function startGame(){

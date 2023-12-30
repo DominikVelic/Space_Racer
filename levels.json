@@ -1,32 +1,32 @@
 {
     "levels":[
         {
-            "meteors": 10,
-            "meteor_speed": 0.05,
+            "meteors": 4,
+            "meteor_speed": 10,
             "meteor_x": [600,2500,1300,2600,3500,1200,2400,1600,800,3200],
-            "meteor_y": [0,0,-4000,-4000,-8000,-8000,-8000,-12000,-12000,-12000]
+            "meteor_y": [-800,-800,-4000,-4000,-8000,-8000,-8000,-12000,-12000,-12000]
         },
         {
             "meteors": 20,
-            "meteor_speed": 0.1,
+            "meteor_speed": 8,
             "meteor_x": [0],
             "meteor_y": [0]
         },
         {
             "meteors": 30,
-            "meteor_speed": 0.15,
+            "meteor_speed": 12,
             "meteor_x": [0],
             "meteor_y": [0]
         },
         {
             "meteors": 40,
-            "meteor_speed": 0.3,
+            "meteor_speed": 15,
             "meteor_x": [0],
             "meteor_y": [0]
         },
         {
             "meteors": 50,
-            "meteor_speed": 0.5,
+            "meteor_speed": 16,
             "meteor_x": [0],
             "meteor_y": [0]
         }
