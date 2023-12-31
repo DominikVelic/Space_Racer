@@ -289,6 +289,7 @@ class Player extends Component{
         // Example: Adjust object's position or rotation based on beta and gamma angles
         // (Translate beta and gamma to your game's coordinate system)
         // Update the position or rotation of your 2D object accordingly
+        
         this.keys.forEach((_, index) => {
             this.keys[index] = false;
         });
