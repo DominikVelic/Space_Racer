@@ -1,7 +1,8 @@
 console.log("loaded");
 
 let game;
-let continueButton = document.getElementById("continue");
+let continueButton = document.getElementById("unpause");
+let modal = document.getElementById("modal");
 
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
@@ -38,13 +39,15 @@ class Game {
         this.canvasHeight = canvasHeight;
         this.objects = [];
         this.levelIndex = 0;
-        this.pause=document.createElement('a');
-        this.pause.innerHTML="≡";
-        this.pause.className="pause";
-        this.menuScreen = true;
+        this.paused=document.createElement('a');
+        this.paused.innerHTML="≡";
+        this.paused.className="pause";
+        this.startMenu = null;
+        this.paused = null;
     }
 
-    start() {
+    initialize() {
+        continueButton.textContent = "Start";
         this.player = new Player(1750, 2000, 500, 600, this);
         this.background = new Background(0, -4000, 4000, 8000, this);
         this.canvas.width = this.canvasWidth;
@@ -52,6 +55,9 @@ class Game {
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(() => this.updateGame(), 20);
         this.fillObjects();
+        this.startMenu = true;
+        this.changeLevel();
+        this.paused = false;
     }
 
     fillObjects() {
@@ -98,7 +104,9 @@ class Game {
     }
 
     drawBackground() {
-        this.background.moveUp();
+        if(!this.paused){
+            this.background.moveUp();
+        }
         this.background.draw();
     }
 
@@ -126,7 +134,7 @@ class Game {
     updateGame() {
         this.clear();
         this.drawBackground();
-        if(!this.menuScreen){
+        if(!this.startMenu){
             this.updateObjects();
             this.checkCollision();
         }
@@ -238,7 +246,7 @@ class Meteor extends Component{
 
     update(){
         this.checkVisibility();
-        if(this.inGame){
+        if(this.inGame && !this.game.paused){
             this.resetSpeed();
             this.moveDown();
             this.draw();
@@ -384,7 +392,7 @@ class Player extends Component{
     }  
 
     update(){
-        if(!this.game.menuScreen){
+        if(!this.game.menuScreen || !this.game.paused){
             this.resetSpeed();
             this.pressedKey();
             this.move();
@@ -395,11 +403,12 @@ class Player extends Component{
 
 function startGame(){
     game = new Game(4000,4000);
-    game.start();
+    game.initialize();
 }
 
-function restart(){
-
+function unpause(){
+    game.menuScreen = false;
+    modal.style.display = "none";
 }
 
 function pause(){
