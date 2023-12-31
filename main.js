@@ -44,6 +44,14 @@ class Game {
         this.paused.className="pause";
         this.startMenu = null;
         this.paused = null;
+        window.addEventListener('keydown', (e) => {
+            if(this.paused && e.key == "p" && !this.startMenu){
+                unpause();
+            }
+            else if(!this.paused && e.key == "p" && !this.startMenu){
+                pause();
+            }
+        });
     }
 
     initialize() {
@@ -134,8 +142,8 @@ class Game {
     updateGame() {
         this.clear();
         this.drawBackground();
+        this.updateObjects();
         if(!this.startMenu){
-            this.updateObjects();
             this.checkCollision();
         }
         this.player.update();
@@ -246,11 +254,14 @@ class Meteor extends Component{
 
     update(){
         this.checkVisibility();
-        if(this.inGame && !this.game.paused){
+        if(this.inGame && !this.game.paused && !this.game.startMenu){
             this.resetSpeed();
             this.moveDown();
+        }
+        if(this.inGame){
             this.draw();
         }
+
     }
 }
 
@@ -272,11 +283,11 @@ class Player extends Component{
             {x: (this.x+260), y: (this.y+440)},
         ];
         window.addEventListener('keydown', (e) => {
-            this.keys[e.keyCode] = true;
+            this.keys[e.key] = true;
             
         });
         window.addEventListener('keyup', (e) => {
-            this.keys[e.keyCode] = false;
+            this.keys[e.key] = false;
             
         });
         this.img = new Image();
@@ -298,30 +309,30 @@ class Player extends Component{
         // (Translate beta and gamma to your game's coordinate system)
         // Update the position or rotation of your 2D object accordingly
 
-        this.keys.forEach((_, index) => {
-            this.keys[index] = false;
+        this.keys.forEach((key) => {
+            this.keys[key] = false;
         });
 
         if (beta > 5) {
-            this.keys[83] = true;
+            this.keys["w"] = true;
         }
         if (gamma > 5) {
-            this.keys[68] = true;
+            this.keys["d"] = true;
         }
         if(beta < -5){
-            this.keys[87] = true;
+            this.keys["a"] = true;
         }
         if(gamma < -5){
-            this.keys[65] = true;
+            this.keys["d"] = true;
         }
 
     }
 
     pressedKey() {
-        if (this.keys && this.keys[65]) { this.moveLeft(); }
-        if (this.keys && this.keys[68]) { this.moveRight(); }
-        if (this.keys && this.keys[87]) { this.moveUp(); }
-        if (this.keys && this.keys[83]) { this.moveDown(); }
+        if (this.keys && this.keys["a"] && !this.game.paused) { this.moveLeft(); }
+        if (this.keys && this.keys["d"] && !this.game.paused) { this.moveRight(); }
+        if (this.keys && this.keys["w"] && !this.game.paused) { this.moveUp(); }
+        if (this.keys && this.keys["s"] && !this.game.paused) { this.moveDown(); }
     }
 
     moveUp(){
@@ -407,12 +418,17 @@ function startGame(){
 }
 
 function unpause(){
-    game.menuScreen = false;
+    if(game.startMenu){
+        game.startMenu = false;
+        continueButton.textContent = "Continue";
+    }
     modal.style.display = "none";
+    game.paused = false;
 }
 
 function pause(){
-
+    game.paused = true;
+    modal.style.display = "block";
 }
 
 function getRandomNumFromTo(min,max){
