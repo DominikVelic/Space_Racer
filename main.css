@@ -12,13 +12,6 @@ html, body{
     box-sizing: border-box;
 }
 
-.start-game-button{
-    cursor: pointer;
-    border-radius: 20px;
-    padding: 15px 1em;
-    font-size: 4em;
-    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-}
 
 canvas{
     position: absolute;
@@ -40,6 +33,6 @@ canvas{
 @font-face {
     font-family: 'SpaceMission';
     src: url('./space-mission-font/SpaceMission-rgyw9.otf');
-  }
+}
 
 

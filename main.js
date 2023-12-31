@@ -4,9 +4,28 @@ if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
     .then(function() { console.log("Service Worker Registered"); });
 }
+
+if (window.DeviceOrientationEvent) {
+    console.log("DeviceOrientationEvent supported");
+} else {
+    console.log("DeviceOrientationEvent not supported");
+}
+
+if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+            if (permissionState === 'granted') {
+                console.log("Permission granted");
+            } else {
+                console.log("Perminission not granted");
+            }
+        })
+        .catch(console.error);
+}
+
 class Game {
+
     constructor(canvasWidth,canvasHeight) {
-        this.initGyroscope();
         this.canvas = document.createElement("canvas");
         this.context = this.canvas.getContext("2d");
         this.player = null;
@@ -15,40 +34,7 @@ class Game {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
         this.objects = [];
-        this.levelIndex = 1;
-    }
-
-    handleReading(){
-        if (this.gyroscope.x > 0) {
-            this.player.moveRight();
-        }
-        if (this.gyroscope.y > 0) {
-            this.player.moveUp();
-        }
-        if(this.gyroscope.x < 0){
-            this.player.moveLeft();
-        }
-        if(this.gyroscope.y < 0){
-            this.player.moveDown();
-        }
-    }
-    
-    initGyroscope(){
-        if (window.DeviceOrientationEvent) {
-            window.addEventListener("deviceorientation", function(event) {
-                // beta: front back motion
-                const frontToBack = event.beta;
-                // gamma: left to right
-                const leftToRight = event.gamma;
-        
-                if (frontToBack > 0) { this.player.moveUp(); }
-                if (leftToRight > 0) { this.player.moveRight(); }
-                if (frontToBack < 0) { this.player.moveDown(); }
-                if (leftToRight < 0) { this.player.moveLeft(); }
-                
-            }, true);
-        }
-        
+        this.levelIndex = 3;
     }
 
     start() {
@@ -204,6 +190,7 @@ class Background extends Component{
 
 
 class Meteor extends Component{
+
     constructor(x, y, width, height, moveSpeed,game){
         super(x, y, width, height,game);
         this.moveSpeed = moveSpeed;
@@ -289,6 +276,36 @@ class Player extends Component{
         this.img.onload = () => this.loaded = true;
         this.loaded = false;
         this.keys = [];
+        this.handleOrientation = this.handleOrientation.bind(this);
+        window.addEventListener('deviceorientation', this.handleOrientation, true);
+    }
+
+
+    handleOrientation(event) {
+        const beta = parseInt(event.beta);   // X-axis rotation (-180 to 180 degrees)
+        const gamma = parseFloat(event.gamma); // Y-axis rotation (-90 to 90 degrees)
+
+        // Use orientation data to control your 2D object (e.g., a sprite)
+        // Example: Adjust object's position or rotation based on beta and gamma angles
+        // (Translate beta and gamma to your game's coordinate system)
+        // Update the position or rotation of your 2D object accordingly
+        this.keys.forEach((_, index) => {
+            this.keys[index] = false;
+        });
+
+        if (beta > 5) {
+            this.keys[83] = true;
+        }
+        if (gamma > 5) {
+            this.keys[68] = true;
+        }
+        if(beta < -5){
+            this.keys[87] = true;
+        }
+        if(gamma < -5){
+            this.keys[65] = true;
+        }
+
     }
 
     pressedKey() {
