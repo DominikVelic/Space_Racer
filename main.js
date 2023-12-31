@@ -337,14 +337,14 @@ class Player extends Component{
         }
         this.hitbox = [
             {x: this.x+(this.width/2), y: (this.y+20)},
-            {x: (this.x+140), y: (this.y+90)},
-            {x: (this.x+110), y: (this.y+330)},
-            {x: (this.x+30), y: (this.y+410)},
-            {x: (this.x+140), y: (this.y+460)},
-            {x: (this.x+260), y: (this.y+90)},
-            {x: (this.x+290), y: (this.y+330)},
-            {x: (this.x+370), y: (this.y+410)},
-            {x: (this.x+260), y: (this.y+460)},
+            {x: (this.x+168), y: (this.y+90)},
+            {x: (this.x+132), y: (this.y+330)},
+            {x: (this.x+50), y: (this.y+410)},
+            {x: (this.x+168), y: (this.y+460)},
+            {x: (this.x+312), y: (this.y+90)},
+            {x: (this.x+348), y: (this.y+330)},
+            {x: (this.x+450), y: (this.y+410)},
+            {x: (this.x+312), y: (this.y+460)},
         ];;
     }
 
