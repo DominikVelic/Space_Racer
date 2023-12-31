@@ -1,3 +1,7 @@
+@font-face {
+    font-family:'SpaceMission';
+    src: url("./space-mission-font/SpaceMission-rgyw9.otf");
+  }
 html, body{
     width: 100%;
     height: 100%;
@@ -11,7 +15,11 @@ html, body{
 *{
     box-sizing: border-box;
 }
-
+h1{
+    font-family:'SpaceMission';
+    text-align: center;
+    font-size: 60px;
+}
 .start-game-button{
     cursor: pointer;
     border-radius: 20px;
@@ -30,7 +38,46 @@ canvas{
     width: 100%;
     height: 100%;    
 }
-
+.a {
+    right: 0;
+    top: 0;
+    z-index: 1; 
+    cursor: pointer;
+    position: absolute;
+    top: 40%;
+    width: auto;
+    padding: 16px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+.modal {
+    display: block; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2; /* Sit on top */
+    text-align: center;
+    color: #FFFFFF;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+  }
+  .button {
+    background-color: #ffffff14; /* Green */
+    border: 30px #ffffff;
+    color: white;
+    border-radius: 5%;
+    margin: 0 auto;
+    margin-top: 2%;
+    padding: 15px 32px;
+    display: block;
+    font-size: 40px;
+  }
+.button:hover{
+    background-color: #091268;
+}
 @media screen and (min-width: 800px){
     canvas{
         width: 800px;

@@ -1,5 +1,11 @@
 console.log("loaded");
 
+
+let startB = document.getElementById('start');
+let restartB = document.getElementById('restart');
+let helpB = document.getElementById('help');
+let continueB = document.getElementById('continue');
+
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
     .then(function() { console.log("Service Worker Registered"); });
@@ -16,6 +22,9 @@ class Game {
         this.canvasHeight = canvasHeight;
         this.objects = [];
         this.levelIndex = 0;
+        this.pause=document.createElement('a');
+        this.pause.innerHTML="≡";
+        this.pause.className="pause";
     }
 
     handleReading(){
