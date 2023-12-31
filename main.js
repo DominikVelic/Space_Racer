@@ -1,10 +1,7 @@
 console.log("loaded");
 
-
-let startB = document.getElementById('start');
-let restartB = document.getElementById('restart');
-let helpB = document.getElementById('help');
-let continueB = document.getElementById('continue');
+let game;
+let continueButton = document.getElementById("continue");
 
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
@@ -44,15 +41,16 @@ class Game {
         this.pause=document.createElement('a');
         this.pause.innerHTML="≡";
         this.pause.className="pause";
+        this.menuScreen = true;
     }
 
     start() {
-        this.player = new Player(1850, 1900, 500, 600, this);
+        this.player = new Player(1750, 2000, 500, 600, this);
+        this.background = new Background(0, -4000, 4000, 8000, this);
         this.canvas.width = this.canvasWidth;
         this.canvas.height = this.canvasHeight;
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(() => this.updateGame(), 20);
-        this.background = new Background(0, -4000, 4000, 8000,this);
         this.fillObjects();
     }
 
@@ -95,6 +93,10 @@ class Game {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
+    changeLevel(){
+        this.levelIndex = getRandomNumFromTo(0,4);
+    }
+
     drawBackground() {
         this.background.moveUp();
         this.background.draw();
@@ -115,19 +117,6 @@ class Game {
         clearInterval(this.interval);
     }
 
-    //todo: MenuScreen
-    menuScreen(){
-        if(this.interval)
-            this.stop();
-        drawMenuScreen();
-    }
-
-    drawMenuScreen(){
-        this.drawBackground();
-        this.context.drawImage();
-
-    }
-
     updateObjects() {
         for (let i = 0; i < this.objects[this.levelIndex].length; i++) {
             this.objects[this.levelIndex][i].update();
@@ -137,8 +126,10 @@ class Game {
     updateGame() {
         this.clear();
         this.drawBackground();
-        this.updateObjects();
-        this.checkCollision();
+        if(!this.menuScreen){
+            this.updateObjects();
+            this.checkCollision();
+        }
         this.player.update();
     }
 }
@@ -367,7 +358,7 @@ class Player extends Component{
 
     // keby chceme pouzit tuto logiku znova tak som ju vlozil do tejto funkcie aby sa dala lahko pouzit znovu pre vsetky objekty
     isInCanvasX(){
-        if(this.x + this.speedX >= 0 && this.x + this.speedX <= this.game.canvas.width - this.width){
+        if(this.x + this.speedX >= -50 && this.x + this.speedX <= this.game.canvas.width - this.width + 50){
             return true;
         }
         return false;
@@ -393,16 +384,30 @@ class Player extends Component{
     }  
 
     update(){
-        this.resetSpeed();
-        this.pressedKey();
-        this.move();
+        if(!this.game.menuScreen){
+            this.resetSpeed();
+            this.pressedKey();
+            this.move();
+        }
         this.draw();
     }
 };
 
 function startGame(){
-    let game = new Game(4000,4000);
+    game = new Game(4000,4000);
     game.start();
+}
+
+function restart(){
+
+}
+
+function pause(){
+
+}
+
+function getRandomNumFromTo(min,max){
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 

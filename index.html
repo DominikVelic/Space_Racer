@@ -9,11 +9,17 @@
 </head>
 <body onload="startGame()">
     <div class="modal" id="modal">
-        <h1>SPACE RACER</h1>
-        <button class="button" onclick="Continue()">Continue</button>
-        <button class="button" onclick="Start()">Start</button>
-        <button class="button" onclick="Restart()">Restart</button>
-        <button class="button" onclick="Help()">Help</button>
+        <div class="headline">
+            <h1>SPACE RACER</h1>
+        </div>
+            <button type="button" class="button" id="continue" onclick="Continue()">Continue</button>
+            <button type="button" class="button" onclick="Restart()">Restart</button>
+        <div class="instructions">
+            <p>Controls:<p>
+            <p>WASD keys on keyboard</p>
+            <p>On mobile turn the phone in the direction you wish to go</p>
+            <p>Complete level by successfuly avoiding meteors until you reach the end</p>
+        </div>
     </div>
     <script src="./main.js"></script>
 </body>
