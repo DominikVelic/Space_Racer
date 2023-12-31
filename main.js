@@ -329,10 +329,10 @@ class Player extends Component{
     }
 
     pressedKey() {
-        if (this.keys && this.keys["a"] && !this.game.paused) { this.moveLeft(); }
-        if (this.keys && this.keys["d"] && !this.game.paused) { this.moveRight(); }
-        if (this.keys && this.keys["w"] && !this.game.paused) { this.moveUp(); }
-        if (this.keys && this.keys["s"] && !this.game.paused) { this.moveDown(); }
+        if (this.keys && this.keys["a"]) { this.moveLeft(); }
+        if (this.keys && this.keys["d"]) { this.moveRight(); }
+        if (this.keys && this.keys["w"]) { this.moveUp(); }
+        if (this.keys && this.keys["s"]) { this.moveDown(); }
     }
 
     moveUp(){
@@ -403,7 +403,7 @@ class Player extends Component{
     }  
 
     update(){
-        if(!this.game.menuScreen || !this.game.paused){
+        if(!this.game.startMenu && !this.game.paused){
             this.resetSpeed();
             this.pressedKey();
             this.move();
