@@ -108,7 +108,27 @@ class Game {
     }
 
     changeLevel(){
-        this.levelIndex = getRandomNumFromTo(0,4);
+        this.levelIndex = getRandomNumFromTo(0,5);
+    }
+
+    checkLevelEnd(){
+        let objectsPassed = 0;
+        for (let i = 0; i < this.objects[this.levelIndex].length; i++) {
+            if(!this.objects[this.levelIndex][i].inGame)
+                objectsPassed++;
+        }
+        if(objectsPassed == this.objects[this.levelIndex].length){
+            this.levelPassed = true;
+            this.levelIndex++;
+        }
+
+    }
+
+    
+    drawCurrentLevel(){
+        this.context.font = "200px SpaceMission";
+        this.context.fillStyle = "white";
+        this.context.fillText("Level: "+(this.levelIndex+1), 100, 3900);
     }
 
     drawBackground() {
@@ -145,6 +165,7 @@ class Game {
         this.updateObjects();
         if(!this.startMenu){
             this.checkCollision();
+            this.drawCurrentLevel();
         }
         this.player.update();
     }
@@ -284,11 +305,9 @@ class Player extends Component{
         ];
         window.addEventListener('keydown', (e) => {
             this.keys[e.key] = true;
-            
         });
         window.addEventListener('keyup', (e) => {
             this.keys[e.key] = false;
-            
         });
         this.img = new Image();
         this.img.src = this.imgSrc;
@@ -299,35 +318,19 @@ class Player extends Component{
         window.addEventListener('deviceorientation', this.handleOrientation, true);
     }
 
-
     handleOrientation(event) {
-        const beta = parseInt(event.beta);   // X-axis rotation (-180 to 180 degrees)
-        const gamma = parseFloat(event.gamma); // Y-axis rotation (-90 to 90 degrees)
+        const beta = event.beta;   // X-axis rotation (-180 to 180 degrees)
+        const gamma = event.gamma; // Y-axis rotation (-90 to 90 degrees)
 
-        // Use orientation data to control your 2D object (e.g., a sprite)
-        // Example: Adjust object's position or rotation based on beta and gamma angles
-        // (Translate beta and gamma to your game's coordinate system)
-        // Update the position or rotation of your 2D object accordingly
-
-        this.keys.forEach((key) => {
-            this.keys[key] = false;
+        this.keys.forEach((_,index) => {
+            this.keys[index] = false;
         });
 
-        if (beta > 5) {
-            this.keys["w"] = true;
-        }
-        if (gamma > 5) {
-            this.keys["d"] = true;
-        }
-        if(beta < -5){
-            this.keys["a"] = true;
-        }
-        if(gamma < -5){
-            this.keys["d"] = true;
-        }
-
+        if(beta > 5) {this.keys["s"] = true;}
+        if(gamma > 5) {this.keys["d"] = true;}
+        if(beta < -5) {this.keys["w"] = true;}
+        if(gamma < -5) {this.keys["a"] = true;}
     }
-
     pressedKey() {
         if (this.keys && this.keys["a"]) { this.moveLeft(); }
         if (this.keys && this.keys["d"]) { this.moveRight(); }
