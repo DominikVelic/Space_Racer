@@ -43,22 +43,20 @@ class Game {
         this.levelIndex = 0;
         this.startMenu = null;
         this.paused = null;
+        this.gameOver = null;
         window.addEventListener('keydown', (e) => {
-            if(this.paused && e.key == "p" && !this.startMenu){
+            if(this.paused && e.key == "p" && !this.startMenu && !this.gameOver){
                 unpause();
             }
-            else if(!this.paused && e.key == "p" && !this.startMenu){             
+            else if(!this.paused && e.key == "p" && !this.startMenu && !this.gameOver){             
                 pause();
             }
         });
-        window.addEventListener("touchstart", (e) => {
-            if(this.paused && !this.startMenu){
-                unpause();
-            }
-            else if(!this.paused && !this.startMenu){
+        window.addEventListener("touchstart", () => {
+            if(!this.paused && !this.startMenu && !this.gameOver){
                 pause();
             }
-        });
+        },false);
     }
 
     initialize() {
@@ -73,9 +71,11 @@ class Game {
         this.randomLevel();
         this.paused = false;
         this.startMenu = true;
+        this.gameOver = false;
     }
 
     gameOverScreen(){
+        this.gameOver = true
         gameOverScreen.style.display = "block";
         this.stop();
     }
@@ -185,7 +185,7 @@ class Game {
 
     nextLevel(){
         this.levelIndex++;
-        if(this.levelIndex > 5){
+        if(this.levelIndex >= 5){
             this.levelIndex = 0;
         }
         this.stop();
@@ -353,15 +353,16 @@ class Player extends Component{
         const beta = event.beta;   // X-axis rotation (-180 to 180 degrees)
         const gamma = event.gamma; // Y-axis rotation (-90 to 90 degrees)
 
-        this.keys.forEach((_,index) => {
-            this.keys[index] = false;
+        this.keys.forEach( (key) => {
+            this.keys[key] = false;
         });
 
         if(beta > 5) {this.keys["s"] = true;}
-        if(gamma > 5) {this.keys["d"] = true;}
         if(beta < -5) {this.keys["w"] = true;}
+        if(gamma > 5) {this.keys["d"] = true;}
         if(gamma < -5) {this.keys["a"] = true;}
     }
+
     pressedKey() {
         if (this.keys && this.keys["a"]) { this.moveLeft(); }
         if (this.keys && this.keys["d"]) { this.moveRight(); }
@@ -474,6 +475,7 @@ function pause(){
 }
 
 function restart(){
+    game.gameOver = false;
     gameOverScreen.style.display = "none";
     game.clear();
     game.fillObjects();
