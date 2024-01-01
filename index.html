@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body onload="startGame()">
-    <div class="modal" id="modal">
+    <div class="menu" id="menu">
         <div class="headline">
             <h1>SPACE RACER</h1>
         </div>
@@ -21,6 +21,18 @@
             <p>Your goal:</p>
             <p>Complete level by successfuly avoiding meteors until you reach the end</p>
         </div>
+    </div>
+    <div class="gameOver" id="gameOver">
+        <div class="headline">
+            <h1>GAME OVER</h1>
+        </div>
+            <button type="button" class="button" id="unpause" onclick="restart()">Restart</button>
+    </div>
+    <div class="levelPassed" id="levelPassed">
+        <div class="headline">
+            <h1>LEVEL PASSED</h1>
+        </div>
+        <button type="button" class="button" id="unpause" onclick="nextLevel()">Next Level</button>
     </div>
     <script src="./main.js"></script>
 </body>

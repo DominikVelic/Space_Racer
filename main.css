@@ -49,10 +49,32 @@ canvas{
     -webkit-user-select: none;
 }
 
-.modal {
+.menu {
     display: block; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 2; /* Sit on top */
+    text-align: center;
+    color: #FFFFFF;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+}
+
+.gameOver{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 3; /* Sit on top */
+    text-align: center;
+    color: #FFFFFF;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+}
+
+.levelPassed{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 4; /* Sit on top */
     text-align: center;
     color: #FFFFFF;
     width: 100%; /* Full width */

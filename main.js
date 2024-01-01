@@ -2,7 +2,9 @@ console.log("loaded");
 
 let game;
 let continueButton = document.getElementById("unpause");
-let modal = document.getElementById("modal");
+let menu = document.getElementById("menu");
+let gameOverScreen = document.getElementById("gameOver");
+let levelPassedScreen = document.getElementById("levelPassed");
 
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
@@ -39,16 +41,21 @@ class Game {
         this.canvasHeight = canvasHeight;
         this.objects = [];
         this.levelIndex = 0;
-        this.paused=document.createElement('a');
-        this.paused.innerHTML="≡";
-        this.paused.className="pause";
         this.startMenu = null;
         this.paused = null;
         window.addEventListener('keydown', (e) => {
             if(this.paused && e.key == "p" && !this.startMenu){
                 unpause();
             }
-            else if(!this.paused && e.key == "p" && !this.startMenu){
+            else if(!this.paused && e.key == "p" && !this.startMenu){             
+                pause();
+            }
+        });
+        window.addEventListener("touchstart", (e) => {
+            if(this.paused && !this.startMenu){
+                unpause();
+            }
+            else if(!this.paused && !this.startMenu){
                 pause();
             }
         });
@@ -61,14 +68,20 @@ class Game {
         this.canvas.width = this.canvasWidth;
         this.canvas.height = this.canvasHeight;
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.interval = setInterval(() => this.updateGame(), 20);
+        this.startMenuScreen();
         this.fillObjects();
-        this.startMenu = true;
-        this.changeLevel();
+        this.randomLevel();
         this.paused = false;
+        this.startMenu = true;
+    }
+
+    gameOverScreen(){
+        gameOverScreen.style.display = "block";
+        this.stop();
     }
 
     fillObjects() {
+        this.objects = [];
         fetch('./levels.json')
         .then(response => {
             if(response.ok){
@@ -107,7 +120,7 @@ class Game {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    changeLevel(){
+    randomLevel(){
         this.levelIndex = getRandomNumFromTo(0,5);
     }
 
@@ -118,12 +131,22 @@ class Game {
                 objectsPassed++;
         }
         if(objectsPassed == this.objects[this.levelIndex].length){
-            this.levelPassed = true;
-            this.levelIndex++;
+            this.levelPassedScreen();
         }
 
     }
 
+    startMenuScreen(){
+        this.interval = setInterval(() => {
+            this.clear();
+            this.drawBackground();
+            this.player.update();
+        }, 20);
+    }
+
+    levelPassedScreen(){
+        levelPassedScreen.style.display = "block";
+    }
     
     drawCurrentLevel(){
         this.context.font = "200px SpaceMission";
@@ -132,9 +155,7 @@ class Game {
     }
 
     drawBackground() {
-        if(!this.paused){
-            this.background.moveUp();
-        }
+        this.background.moveUp();
         this.background.draw();
     }
 
@@ -142,11 +163,14 @@ class Game {
     checkCollision() {
         for (let i = 0; i < this.objects[this.levelIndex].length; i++) {
             if (this.player.isCollidingWith(this.objects[this.levelIndex][i])) {
-                this.stop();
-                //todo: Game Over screen
+                this.gameOverScreen();
                 break;
             }
         }
+    }
+
+    start(){
+        this.interval = setInterval(() => this.updateGame(), 20);
     }
 
     stop() {
@@ -159,15 +183,24 @@ class Game {
         }
     }
 
+    nextLevel(){
+        this.levelIndex++;
+        if(this.levelIndex > 5){
+            this.levelIndex = 0;
+        }
+        this.stop();
+        this.start();
+        levelPassedScreen.style.display = "none";
+    }
+
     updateGame() {
         this.clear();
         this.drawBackground();
         this.updateObjects();
-        if(!this.startMenu){
-            this.checkCollision();
-            this.drawCurrentLevel();
-        }
+        this.checkCollision();
+        this.drawCurrentLevel();
         this.player.update();
+        this.checkLevelEnd();
     }
 }
 
@@ -275,11 +308,9 @@ class Meteor extends Component{
 
     update(){
         this.checkVisibility();
-        if(this.inGame && !this.game.paused && !this.game.startMenu){
+        if(this.inGame){
             this.resetSpeed();
             this.moveDown();
-        }
-        if(this.inGame){
             this.draw();
         }
 
@@ -378,6 +409,11 @@ class Player extends Component{
         
     }
 
+    resetPosition(){
+        this.x = 1750;
+        this.y = 2000;
+    }
+
     // keby chceme pouzit tuto logiku znova tak som ju vlozil do tejto funkcie aby sa dala lahko pouzit znovu pre vsetky objekty
     isInCanvasX(){
         if(this.x + this.speedX >= -50 && this.x + this.speedX <= this.game.canvas.width - this.width + 50){
@@ -406,7 +442,7 @@ class Player extends Component{
     }  
 
     update(){
-        if(!this.game.startMenu && !this.game.paused){
+        if(!this.game.startMenu){
             this.resetSpeed();
             this.pressedKey();
             this.move();
@@ -424,14 +460,29 @@ function unpause(){
     if(game.startMenu){
         game.startMenu = false;
         continueButton.textContent = "Continue";
+        game.stop();
     }
-    modal.style.display = "none";
     game.paused = false;
+    game.start();
+    menu.style.display = "none";
 }
 
 function pause(){
     game.paused = true;
-    modal.style.display = "block";
+    game.stop();
+    menu.style.display = "block";
+}
+
+function restart(){
+    gameOverScreen.style.display = "none";
+    game.clear();
+    game.fillObjects();
+    game.player.resetPosition();
+    game.start();
+}
+
+function nextLevel(){
+    game.nextLevel();
 }
 
 function getRandomNumFromTo(min,max){
