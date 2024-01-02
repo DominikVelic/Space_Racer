@@ -7,6 +7,11 @@ let menu = document.getElementById("menu");
 let gameOverScreen = document.getElementById("gameOver");
 let levelPassedScreen = document.getElementById("levelPassed");
 
+let up = false;
+let left = false;
+let right = false;
+let down = false;
+
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
     .then(function() { console.log("Service Worker Registered"); });
@@ -364,17 +369,29 @@ class Player extends Component{
             this.keys[key] = false;
         });
 
-        if(beta > 5) {this.keys["s"] = true;}
-        if(beta < -5) {this.keys["w"] = true;}
-        if(gamma > 5) {this.keys["d"] = true;}
-        if(gamma < -5) {this.keys["a"] = true;}
+        if(beta > 5) {down = true;}
+        if(beta < -5) {up = true;}
+        if(gamma > 5) {right= true;}
+        if(gamma < -5) {left = true;}
     }
 
     pressedKey() {
-        if (this.keys && this.keys["a"]) { this.moveLeft(); }
-        if (this.keys && this.keys["d"]) { this.moveRight(); }
-        if (this.keys && this.keys["w"]) { this.moveUp(); }
-        if (this.keys && this.keys["s"]) { this.moveDown(); }
+        if ((this.keys && this.keys["a"]) || left==true) { 
+            this.moveLeft();
+            left=false; 
+        }
+        if ((this.keys && this.keys["d"]) || right==true) {
+            this.moveRight(); 
+            right=false;
+        }
+        if ((this.keys && this.keys["w"]) || up==true) { 
+            this.moveUp();
+            up=false; 
+        }
+        if ((this.keys && this.keys["s"]) || down==true) { 
+            this.moveDown();
+            down=false; 
+        }
     }
 
     moveUp(){
