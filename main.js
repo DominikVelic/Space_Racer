@@ -362,6 +362,11 @@ class Player extends Component{
     }
 
     handleOrientation(event) {
+        left=false; 
+        right=false;
+        up=false; 
+        down=false;
+
         const beta = event.beta;   // X-axis rotation (-180 to 180 degrees)
         const gamma = event.gamma; // Y-axis rotation (-90 to 90 degrees)
 
@@ -378,19 +383,15 @@ class Player extends Component{
     pressedKey() {
         if ((this.keys && this.keys["a"]) || left==true) { 
             this.moveLeft();
-            left=false; 
         }
         if ((this.keys && this.keys["d"]) || right==true) {
             this.moveRight(); 
-            right=false;
         }
         if ((this.keys && this.keys["w"]) || up==true) { 
             this.moveUp();
-            up=false; 
         }
         if ((this.keys && this.keys["s"]) || down==true) { 
             this.moveDown();
-            down=false; 
         }
     }
 
