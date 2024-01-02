@@ -2,6 +2,7 @@ console.log("loaded");
 
 let game;
 let continueButton = document.getElementById("unpause");
+let nextLevelButton = document.getElementById("next-level-button");
 let menu = document.getElementById("menu");
 let gameOverScreen = document.getElementById("gameOver");
 let levelPassedScreen = document.getElementById("levelPassed");
@@ -146,6 +147,12 @@ class Game {
 
     levelPassedScreen(){
         levelPassedScreen.style.display = "block";
+        if(this.levelIndex==4){
+            nextLevelButton.innerHTML="Play again";
+        }
+        else{
+            nextLevelButton.innerHTML="Next level";
+        }
     }
     
     drawCurrentLevel(){
