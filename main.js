@@ -363,6 +363,11 @@ class Player extends Component{
     }
 
     handleOrientation(event) {
+        left=false; 
+        right=false;
+        up=false; 
+        down=false;
+
         const beta = event.beta;   // X-axis rotation (-180 to 180 degrees)
         const gamma = event.gamma; // Y-axis rotation (-90 to 90 degrees)
 
