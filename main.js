@@ -7,10 +7,7 @@ let menu = document.getElementById("menu");
 let gameOverScreen = document.getElementById("gameOver");
 let levelPassedScreen = document.getElementById("levelPassed");
 
-let up = false;
-let left = false;
-let right = false;
-let down = false;
+
 
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./sw.js')
@@ -359,38 +356,39 @@ class Player extends Component{
         this.keys = [];
         this.handleOrientation = this.handleOrientation.bind(this);
         window.addEventListener('deviceorientation', this.handleOrientation, true);
+        this.up = false;
+        this.left = false;
+        this.right = false;
+        this.down = false;
     }
 
     handleOrientation(event) {
         const beta = event.beta;   // X-axis rotation (-180 to 180 degrees)
         const gamma = event.gamma; // Y-axis rotation (-90 to 90 degrees)
 
-        this.keys.forEach( (key) => {
-            this.keys[key] = false;
-        });
+        this.left = false;
+        this.right = false;
+        this.down = false;
+        this.up = false;
 
-        if(beta > 5) {down = true;}
-        if(beta < -5) {up = true;}
-        if(gamma > 5) {right= true;}
-        if(gamma < -5) {left = true;}
+        if(beta > 5) {this.down = true;}
+        if(beta < -5) {this.up = true;}
+        if(gamma > 5) {this.right= true;}
+        if(gamma < -5) {this.left = true;}
     }
 
     pressedKey() {
-        if ((this.keys && this.keys["a"]) || left==true) { 
+        if ((this.keys && this.keys["a"]) || this.left==true) { 
             this.moveLeft();
-            left=false; 
         }
-        if ((this.keys && this.keys["d"]) || right==true) {
+        if ((this.keys && this.keys["d"]) || this.right==true) {
             this.moveRight(); 
-            right=false;
         }
-        if ((this.keys && this.keys["w"]) || up==true) { 
+        if ((this.keys && this.keys["w"]) || this.up==true) { 
             this.moveUp();
-            up=false; 
         }
-        if ((this.keys && this.keys["s"]) || down==true) { 
+        if ((this.keys && this.keys["s"]) || this.down==true) { 
             this.moveDown();
-            down=false; 
         }
     }
 
