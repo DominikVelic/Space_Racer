@@ -71,7 +71,16 @@ class Game {
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.startMenuScreen();
         this.fillObjects();
-        this.randomLevel();
+        // precita sa levelIndex ulozeny na systeme ak existuje, ak nie tak potom sa nastavi nahodny
+        if(localStorage.getItem("levelIndex") == null){
+            this.randomLevel();
+            window.onbeforeunload = () => {
+                localStorage.setItem('levelIndex', this.levelIndex);
+            };
+        }
+        else{
+            this.levelIndex = localStorage.getItem("levelIndex");
+        }
         this.paused = false;
         this.startMenu = true;
         this.gameOver = false;
@@ -160,7 +169,7 @@ class Game {
     drawCurrentLevel(){
         this.context.font = "200px SpaceMission";
         this.context.fillStyle = "white";
-        this.context.fillText("Level: "+(this.levelIndex+1), 100, 3900);
+        this.context.fillText("Level: "+(parseInt(this.levelIndex)+1), 100, 3900);
     }
 
     drawBackground() {
@@ -197,7 +206,10 @@ class Game {
         if(this.levelIndex >= 5){
             this.levelIndex = 0;
         }
-        this.stop();
+        window.onbeforeunload = () => {
+            localStorage.setItem('levelIndex', this.levelIndex);
+        };
+        this.stop(); //aby nestupnovali intervaly, asi sme mali pouzit requestAnimationFrame
         this.start();
         levelPassedScreen.style.display = "none";
     }
