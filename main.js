@@ -235,7 +235,6 @@ class Component {
         this.y = y;
         this.speedX = 0;
         this.speedY = 0;
-
     }
     
     move(){
