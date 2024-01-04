@@ -47,6 +47,7 @@ class Game {
         this.startMenu = null;
         this.paused = null;
         this.gameOver = null;
+        this.levelPassed = null;
         window.addEventListener('keydown', (e) => {
             if(this.paused && e.key == "p" && !this.startMenu && !this.gameOver){
                 unpause();
@@ -84,6 +85,7 @@ class Game {
         this.paused = false;
         this.startMenu = true;
         this.gameOver = false;
+        this.levelPassed = false;
     }
 
     gameOverScreen(){
@@ -157,6 +159,7 @@ class Game {
     }
 
     levelPassedScreen(){
+        this.levelPassed = true;
         this.stop(); //aby nestupnovali intervaly, asi sme mali pouzit requestAnimationFrame
         this.backgroundLoop();
         this.levelIndex++;
@@ -218,6 +221,7 @@ class Game {
         this.stop();
         this.start();
         levelPassedScreen.style.display = "none";
+        this.levelPassed = false;
     }
 
     updateGame() {
@@ -508,9 +512,11 @@ function unpause(){
 }
 
 function pause(){
-    game.paused = true;
-    game.stop();
-    menu.style.display = "block";
+    if(!game.levelPassed){
+        game.paused = true;
+        game.stop();
+        menu.style.display = "block";
+    }
 }
 
 function restart(){
