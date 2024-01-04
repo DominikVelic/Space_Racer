@@ -157,6 +157,13 @@ class Game {
     }
 
     levelPassedScreen(){
+        this.levelIndex++;
+        if(this.levelIndex >= 5){
+            this.levelIndex = 0;
+        }
+        window.onbeforeunload = () => {
+            localStorage.setItem('levelIndex', this.levelIndex);
+        };
         levelPassedScreen.style.display = "block";
         if(this.levelIndex==4){
             nextLevelButton.innerHTML="Play again";
@@ -202,13 +209,6 @@ class Game {
     }
 
     nextLevel(){
-        this.levelIndex++;
-        if(this.levelIndex >= 5){
-            this.levelIndex = 0;
-        }
-        window.onbeforeunload = () => {
-            localStorage.setItem('levelIndex', this.levelIndex);
-        };
         this.stop(); //aby nestupnovali intervaly, asi sme mali pouzit requestAnimationFrame
         this.start();
         levelPassedScreen.style.display = "none";

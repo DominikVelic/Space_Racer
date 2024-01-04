@@ -1,18 +1,18 @@
 self.addEventListener('install', function(event) {
     event.waitUntil(
-      caches.open('WEBTE-hra').then(function(cache) {
+      caches.open('SpaceRacer').then(function(cache) {
         return cache.addAll([
-          '/~xvelic/WEBTE-hra/',
-          '/~xvelic/WEBTE-hra/index.html',
-          '/~xvelic/WEBTE-hra/main.js',
-          '/~xvelic/WEBTE-hra/main.css',
-          '/~xvelic/WEBTE-hra/manifest.json',
-          '/~xvelic/WEBTE-hra/levels.json',
-          '/~xvelic/WEBTE-hra/img/meteor.png',
-          '/~xvelic/WEBTE-hra/img/rocket.png',
-          '/~xvelic/WEBTE-hra/img/space.png',
-          '/~xvelic/WEBTE-hra/img/space_icon.png',
-          '/~xvelic/WEBTE-hra/space-mission-font/SpaceMission-rgyw9.otf',
+          '/~xvelic/SpaceRacer/',
+          '/~xvelic/SpaceRacer/index.html',
+          '/~xvelic/SpaceRacer/main.js',
+          '/~xvelic/SpaceRacer/main.css',
+          '/~xvelic/SpaceRacer/manifest.json',
+          '/~xvelic/SpaceRacer/levels.json',
+          '/~xvelic/SpaceRacer/img/meteor.png',
+          '/~xvelic/SpaceRacer/img/rocket.png',
+          '/~xvelic/SpaceRacer/img/space.png',
+          '/~xvelic/SpaceRacer/img/rocket_icon.png',
+          '/~xvelic/SpaceRacer/space-mission-font/SpaceMission-rgyw9.otf',
         ]);
       })
     );
