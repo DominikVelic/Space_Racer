@@ -170,7 +170,7 @@ class Game {
             localStorage.setItem('levelIndex', this.levelIndex);
         };
         levelPassedScreen.style.display = "block";
-        if(this.levelIndex==4){
+        if(this.levelIndex==5){
             nextLevelButton.innerHTML="Play again";
         }
         else{
